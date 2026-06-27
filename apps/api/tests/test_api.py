@@ -2,6 +2,7 @@ from fastapi.testclient import TestClient
 
 from app.main import app
 from app.services.buffer_client import BufferClient
+from app.services.meta_client import MetaClient
 
 
 client = TestClient(app)
@@ -48,6 +49,24 @@ def test_buffer_client_without_token() -> None:
     assert status.configured is False
     assert status.connected is False
     assert status.channels_count == 0
+
+
+def test_meta_status_route() -> None:
+    response = client.get("/integrations/meta/status")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert "configured" in payload
+    assert "graph_api_version" in payload
+    assert isinstance(payload["notes"], list)
+
+
+def test_meta_client_without_token() -> None:
+    status = MetaClient(graph_api_version="v25.0").status()
+
+    assert status.configured is False
+    assert status.connected is False
+    assert status.system_user_token_configured is False
 
 
 def test_generate_draft_without_key() -> None:

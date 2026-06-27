@@ -68,6 +68,28 @@ class BufferStatus(BaseModel):
     notes: List[str]
 
 
+class MetaAsset(BaseModel):
+    id: str
+    name: Optional[str] = None
+    username: Optional[str] = None
+
+
+class MetaStatus(BaseModel):
+    configured: bool
+    connected: bool
+    graph_api_version: str
+    app_configured: bool
+    system_user_token_configured: bool
+    business_id_configured: bool
+    page_id_configured: bool
+    instagram_business_account_id_configured: bool
+    webhook_verify_token_configured: bool
+    business: Optional[MetaAsset] = None
+    page: Optional[MetaAsset] = None
+    instagram_business_account: Optional[MetaAsset] = None
+    notes: List[str]
+
+
 class SourceItem(BaseModel):
     id: str
     name: str
