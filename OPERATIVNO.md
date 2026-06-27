@@ -94,7 +94,7 @@ uvicorn app.main:app --host 0.0.0.0 --port $PORT
    - Napravi drugi Railway service iz istog repo-a.
    - Service root ostavi prazan / repo root.
    - Ne stavljaj `apps/web` kao root, jer build mora da vidi `packages/shared`.
-   - Build command: `npm ci && npm run build --workspace apps/web`
+   - Build command: `npm install && npm run build --workspace apps/web`
    - Start command: `npm run start --workspace apps/web -- --hostname 0.0.0.0 --port $PORT`
    - Koristimo ga za `app.elevatemindstudio.net` dok Vercel nalog/token ne bude aktivan.
    - Meni vracas Railway generated frontend URL.
@@ -166,7 +166,7 @@ Zatim napravi Railway web service:
 
 - Repository: `Aleksandar-algoporven/elevatemindstudio`
 - Root directory: ostavi prazno / repo root
-- Build command: `npm ci && npm run build --workspace apps/web`
+- Build command: `npm install && npm run build --workspace apps/web`
 - Start command: `npm run start --workspace apps/web -- --hostname 0.0.0.0 --port $PORT`
 - Env:
   - `NEXT_PUBLIC_APP_URL=https://app.elevatemindstudio.net`

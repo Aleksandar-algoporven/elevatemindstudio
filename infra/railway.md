@@ -19,7 +19,7 @@ Temporary frontend hosting:
 
 - Use Railway for the web app until Vercel account/token is active.
 - Service root: leave empty / repo root. Do not set it to `apps/web`, because the app depends on `packages/shared`.
-- Build command: `npm ci && npm run build --workspace apps/web`
+- Build command: `npm install && npm run build --workspace apps/web`
 - Start command: `npm run start --workspace apps/web -- --hostname 0.0.0.0 --port $PORT`
 - Public domain target: `app.elevatemindstudio.net`
 - Required variables:
