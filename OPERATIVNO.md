@@ -90,33 +90,39 @@ uvicorn app.main:app --host 0.0.0.0 --port $PORT
    - Napravi Redis bazu.
    - Meni vracas `UPSTASH_REDIS_REST_URL` i token ako nije kompletan.
 
-4. Vercel
-   - Import repo za frontend kasnije.
+4. Railway web service, privremeno umesto Vercel
+   - Napravi drugi Railway service iz istog repo-a.
+   - Service root mora biti `apps/web`.
+   - Koristimo ga za `app.elevatemindstudio.net` dok Vercel nalog/token ne bude aktivan.
+   - Meni vracas Railway generated frontend URL.
+
+5. Vercel, kasnije
+   - Import repo za frontend kada token/account bude spreman.
    - Frontend root ce biti `apps/web`.
-   - Meni vracas project URL kada deploy bude spreman.
+   - Ovo nije blokator za MVP dok Railway hostuje web.
 
 ### Zatim social bridge
 
-5. Buffer
+6. Buffer
    - Povezi prve kanale kroz Buffer.
    - Meni vracas client id/secret/refresh token ako ih Buffer da.
 
-6. Meta Business + Instagram + Facebook Page
+7. Meta Business + Instagram + Facebook Page
    - Napravi Meta Business setup.
    - Povezi Instagram professional account sa Facebook Page.
    - Meni vracas app id, business id, page id, Instagram business account id.
 
-7. LinkedIn
+8. LinkedIn
    - Napravi company page ili potvrdi postojecu.
    - Napravi developer app.
    - Meni vracas client id, client secret, organization id.
 
-8. YouTube / Google Cloud
+9. YouTube / Google Cloud
    - Ukljuci YouTube Data API v3.
    - OAuth client vec imamo upisan.
    - Meni ce trebati refresh token i channel id.
 
-9. X, Discord, Reddit, Substack
+10. X, Discord, Reddit, Substack
    - Radimo posle core infra + Buffer setup-a.
    - Discord mozemo ranije jer je najlaksi za bot/inbox alerts.
 
@@ -152,3 +158,13 @@ Otvori Railway project i podesi backend service:
   - `CORS_ORIGIN=https://app.elevatemindstudio.net`
 
 Kada Railway deploy prodje, meni posalji backend URL.
+
+Zatim napravi Railway web service:
+
+- Repository: `Aleksandar-algoporven/elevatemindstudio`
+- Root directory: `apps/web`
+- Env:
+  - `NEXT_PUBLIC_APP_URL=https://app.elevatemindstudio.net`
+  - `NEXT_PUBLIC_API_BASE_URL=https://api.elevatemindstudio.net`
+
+Kada web deploy prodje, meni posalji frontend Railway URL.
