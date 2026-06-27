@@ -1,6 +1,7 @@
 from fastapi.testclient import TestClient
 
 from app.main import app
+from app.services.buffer_client import BufferClient
 
 
 client = TestClient(app)
@@ -29,6 +30,24 @@ def test_channels_sources_and_inbox() -> None:
     assert channels.json()[0]["publishing_supported"] is True
     assert sources.json()[0]["source_type"] == "website"
     assert inbox.json()[0]["needs_human"] is True
+
+
+def test_buffer_status_route() -> None:
+    response = client.get("/integrations/buffer/status")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert "configured" in payload
+    assert "channels_count" in payload
+    assert isinstance(payload["channels"], list)
+
+
+def test_buffer_client_without_token() -> None:
+    status = BufferClient(access_token="").status()
+
+    assert status.configured is False
+    assert status.connected is False
+    assert status.channels_count == 0
 
 
 def test_generate_draft_without_key() -> None:

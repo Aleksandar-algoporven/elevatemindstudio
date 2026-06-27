@@ -45,6 +45,29 @@ class ChannelConnection(BaseModel):
     notes: str
 
 
+class BufferChannel(BaseModel):
+    id: str
+    service: str
+    name: str
+    display_name: str
+    descriptor: str = ""
+    channel_type: str = ""
+    is_disconnected: bool
+    is_locked: bool
+    allowed_actions: List[str]
+    products: List[str]
+
+
+class BufferStatus(BaseModel):
+    configured: bool
+    connected: bool
+    organization_id: Optional[str] = None
+    organization_name: Optional[str] = None
+    channels_count: int = Field(ge=0)
+    channels: List[BufferChannel]
+    notes: List[str]
+
+
 class SourceItem(BaseModel):
     id: str
     name: str

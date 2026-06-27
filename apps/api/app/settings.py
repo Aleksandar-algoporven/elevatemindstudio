@@ -9,6 +9,8 @@ class Settings:
     anthropic_api_key: str = os.getenv("ANTHROPIC_API_KEY", "")
     anthropic_model: str = os.getenv("ANTHROPIC_MODEL", "claude-sonnet-4-6")
     cors_origin: str = os.getenv("CORS_ORIGIN", os.getenv("NEXT_PUBLIC_APP_URL", "http://localhost:3000"))
+    buffer_access_token: str = os.getenv("BUFFER_ACCESS_TOKEN", "")
+    buffer_organization_id: str = os.getenv("BUFFER_ORGANIZATION_ID", "")
 
 
 settings = Settings()
