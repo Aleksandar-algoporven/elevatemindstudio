@@ -11,17 +11,17 @@
   },
   "dependencies": {
     "@elevatemindstudio/shared": "file:../../packages/shared",
-    "next": "^15.5.16",
+    "next": "^15.5.18",
     "postcss": "^8.5.15",
-    "react": "^19.2.1",
-    "react-dom": "^19.2.1"
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
   },
   "devDependencies": {
     "@types/node": "^20.14.10",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "eslint": "^9.39.4",
-    "eslint-config-next": "^15.5.16",
+    "eslint-config-next": "^15.5.18",
     "typescript": "^5.5.3"
   }
 }
