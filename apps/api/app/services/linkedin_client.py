@@ -11,7 +11,7 @@ from app.settings import settings
 LINKEDIN_API_BASE_URL = "https://api.linkedin.com"
 LINKEDIN_AUTHORIZATION_URL = "https://www.linkedin.com/oauth/v2/authorization"
 LINKEDIN_TOKEN_URL = "https://www.linkedin.com/oauth/v2/accessToken"
-LINKEDIN_SCOPES = [
+LINKEDIN_DEFAULT_SCOPES = [
     "openid",
     "profile",
     "email",
@@ -31,6 +31,7 @@ class LinkedInClient:
         redirect_uri: str = "",
         access_token: str = "",
         refresh_token: str = "",
+        scopes: Optional[List[str]] = None,
         base_url: str = LINKEDIN_API_BASE_URL,
         timeout: float = 15.0,
     ) -> None:
@@ -41,6 +42,7 @@ class LinkedInClient:
         self.redirect_uri = redirect_uri
         self.access_token = access_token
         self.refresh_token = refresh_token
+        self.scopes = scopes or LINKEDIN_DEFAULT_SCOPES
         self.base_url = base_url.rstrip("/")
         self.timeout = timeout
 
@@ -95,7 +97,7 @@ class LinkedInClient:
                 configured=False,
                 authorization_url=None,
                 state=None,
-                scopes=LINKEDIN_SCOPES,
+                scopes=self.scopes,
                 notes=notes,
             )
 
@@ -106,14 +108,14 @@ class LinkedInClient:
                 "client_id": self.client_id,
                 "redirect_uri": self.redirect_uri,
                 "state": state,
-                "scope": " ".join(LINKEDIN_SCOPES),
+                "scope": " ".join(self.scopes),
             }
         )
         return LinkedInAuthorizationUrl(
             configured=True,
             authorization_url=f"{LINKEDIN_AUTHORIZATION_URL}?{query}",
             state=state,
-            scopes=LINKEDIN_SCOPES,
+            scopes=self.scopes,
             notes=["Open this URL to authorize the LinkedIn app. The callback response will not expose token values."],
         )
 
@@ -247,6 +249,7 @@ def get_linkedin_status() -> LinkedInStatus:
         redirect_uri=settings.linkedin_redirect_uri,
         access_token=settings.linkedin_access_token,
         refresh_token=settings.linkedin_refresh_token,
+        scopes=settings.linkedin_scope_list,
     ).status()
 
 
@@ -259,6 +262,7 @@ def get_linkedin_authorization_url() -> LinkedInAuthorizationUrl:
         redirect_uri=settings.linkedin_redirect_uri,
         access_token=settings.linkedin_access_token,
         refresh_token=settings.linkedin_refresh_token,
+        scopes=settings.linkedin_scope_list,
     ).authorization_url()
 
 
@@ -271,4 +275,5 @@ def exchange_linkedin_code(code: str) -> LinkedInOAuthCallbackResult:
         redirect_uri=settings.linkedin_redirect_uri,
         access_token=settings.linkedin_access_token,
         refresh_token=settings.linkedin_refresh_token,
+        scopes=settings.linkedin_scope_list,
     ).exchange_code(code)

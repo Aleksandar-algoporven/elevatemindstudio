@@ -2,6 +2,9 @@ import os
 from dataclasses import dataclass
 
 
+DEFAULT_LINKEDIN_SCOPES = "openid profile email w_member_social r_organization_social w_organization_social"
+
+
 @dataclass(frozen=True)
 class Settings:
     app_name: str = os.getenv("APP_NAME", "ElevateMindStudio")
@@ -20,6 +23,7 @@ class Settings:
     meta_ig_business_account_id: str = os.getenv("META_IG_BUSINESS_ACCOUNT_ID", "")
     meta_webhook_verify_token: str = os.getenv("META_WEBHOOK_VERIFY_TOKEN", "")
     linkedin_api_version: str = os.getenv("LINKEDIN_API_VERSION", "202606")
+    linkedin_scopes: str = os.getenv("LINKEDIN_SCOPES", DEFAULT_LINKEDIN_SCOPES)
     linkedin_client_id: str = os.getenv("LINKEDIN_CLIENT_ID", "")
     linkedin_client_secret: str = os.getenv("LINKEDIN_CLIENT_SECRET", "")
     linkedin_org_id: str = os.getenv("LINKEDIN_ORG_ID", "")
@@ -31,6 +35,10 @@ class Settings:
     discord_public_key: str = os.getenv("DISCORD_PUBLIC_KEY", "")
     discord_guild_id: str = os.getenv("DISCORD_GUILD_ID", "")
     discord_alerts_channel_id: str = os.getenv("DISCORD_ALERTS_CHANNEL_ID", "")
+
+    @property
+    def linkedin_scope_list(self) -> list[str]:
+        return [scope for scope in self.linkedin_scopes.replace(",", " ").split() if scope]
 
 
 settings = Settings()

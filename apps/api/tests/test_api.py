@@ -91,6 +91,20 @@ def test_linkedin_authorize_route() -> None:
     assert "w_member_social" in payload["scopes"]
 
 
+def test_linkedin_authorize_uses_custom_scopes() -> None:
+    result = LinkedInClient(
+        api_version="202606",
+        client_id="client-id",
+        redirect_uri="https://example.com/callback",
+        scopes=["r_organization_social", "w_organization_social"],
+    ).authorization_url()
+
+    assert result.configured is True
+    assert result.scopes == ["r_organization_social", "w_organization_social"]
+    assert result.authorization_url is not None
+    assert "scope=r_organization_social+w_organization_social" in result.authorization_url
+
+
 def test_linkedin_callback_requires_code() -> None:
     response = client.get("/integrations/linkedin/oauth/callback")
 
