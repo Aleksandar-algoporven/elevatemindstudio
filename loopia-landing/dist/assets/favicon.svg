@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="ElevateMindStudio">
+  <rect width="64" height="64" rx="12" fill="#fffaf0"/>
+  <rect x="8" y="8" width="48" height="48" rx="9" fill="none" stroke="#a78234" stroke-width="3"/>
+  <path d="M22 43V21h17v5H28v4h9v5h-9v8h-6Zm21 0V21h-5l-6 9-6-9h-5v22h5V30l6 9 6-9v13h5Z" fill="#1f2423"/>
+</svg>
