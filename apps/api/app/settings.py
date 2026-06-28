@@ -3,6 +3,11 @@ from dataclasses import dataclass
 
 
 DEFAULT_LINKEDIN_SCOPES = "openid profile email w_member_social r_organization_social w_organization_social"
+DEFAULT_YOUTUBE_SCOPES = (
+    "https://www.googleapis.com/auth/youtube.readonly "
+    "https://www.googleapis.com/auth/youtube.upload "
+    "https://www.googleapis.com/auth/youtube.force-ssl"
+)
 
 
 @dataclass(frozen=True)
@@ -35,10 +40,20 @@ class Settings:
     discord_public_key: str = os.getenv("DISCORD_PUBLIC_KEY", "")
     discord_guild_id: str = os.getenv("DISCORD_GUILD_ID", "")
     discord_alerts_channel_id: str = os.getenv("DISCORD_ALERTS_CHANNEL_ID", "")
+    youtube_client_id: str = os.getenv("YOUTUBE_CLIENT_ID", "")
+    youtube_client_secret: str = os.getenv("YOUTUBE_CLIENT_SECRET", "")
+    youtube_refresh_token: str = os.getenv("YOUTUBE_REFRESH_TOKEN", "")
+    youtube_channel_id: str = os.getenv("YOUTUBE_CHANNEL_ID", "")
+    youtube_redirect_uri: str = os.getenv("YOUTUBE_REDIRECT_URI", "")
+    youtube_scopes: str = os.getenv("YOUTUBE_SCOPES", DEFAULT_YOUTUBE_SCOPES)
 
     @property
     def linkedin_scope_list(self) -> list[str]:
         return [scope for scope in self.linkedin_scopes.replace(",", " ").split() if scope]
+
+    @property
+    def youtube_scope_list(self) -> list[str]:
+        return [scope for scope in self.youtube_scopes.replace(",", " ").split() if scope]
 
 
 settings = Settings()

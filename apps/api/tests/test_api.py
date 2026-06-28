@@ -5,6 +5,7 @@ from app.services.buffer_client import BufferClient
 from app.services.discord_client import DiscordClient
 from app.services.linkedin_client import LinkedInClient
 from app.services.meta_client import MetaClient
+from app.services.youtube_client import YouTubeClient
 
 
 client = TestClient(app)
@@ -135,6 +136,55 @@ def test_discord_client_without_token() -> None:
     assert status.configured is False
     assert status.connected is False
     assert status.bot_token_configured is False
+
+
+def test_youtube_status_route() -> None:
+    response = client.get("/integrations/youtube/status")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert "configured" in payload
+    assert "client_configured" in payload
+    assert isinstance(payload["notes"], list)
+
+
+def test_youtube_authorize_route() -> None:
+    response = client.get("/integrations/youtube/oauth/authorize")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert "configured" in payload
+    assert "scopes" in payload
+    assert "https://www.googleapis.com/auth/youtube.upload" in payload["scopes"]
+
+
+def test_youtube_authorize_uses_custom_scopes() -> None:
+    result = YouTubeClient(
+        client_id="client-id",
+        redirect_uri="https://example.com/callback",
+        scopes=["https://www.googleapis.com/auth/youtube.readonly"],
+    ).authorization_url()
+
+    assert result.configured is True
+    assert result.scopes == ["https://www.googleapis.com/auth/youtube.readonly"]
+    assert result.authorization_url is not None
+    assert "access_type=offline" in result.authorization_url
+    assert "prompt=consent" in result.authorization_url
+
+
+def test_youtube_callback_requires_code() -> None:
+    response = client.get("/integrations/youtube/oauth/callback")
+
+    assert response.status_code == 400
+
+
+def test_youtube_client_without_refresh_token() -> None:
+    status = YouTubeClient(client_id="client-id", client_secret="client-secret").status()
+
+    assert status.configured is True
+    assert status.connected is False
+    assert status.client_configured is True
+    assert status.refresh_token_configured is False
 
 
 def test_generate_draft_without_key() -> None:

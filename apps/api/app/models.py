@@ -159,6 +159,43 @@ class DiscordStatus(BaseModel):
     notes: List[str]
 
 
+class YouTubeChannel(BaseModel):
+    id: str
+    title: Optional[str] = None
+    custom_url: Optional[str] = None
+
+
+class YouTubeStatus(BaseModel):
+    configured: bool
+    connected: bool
+    client_configured: bool
+    refresh_token_configured: bool
+    channel_id_configured: bool
+    redirect_uri_configured: bool
+    channel: Optional[YouTubeChannel] = None
+    notes: List[str]
+
+
+class YouTubeAuthorizationUrl(BaseModel):
+    configured: bool
+    authorization_url: Optional[str] = None
+    state: Optional[str] = None
+    scopes: List[str]
+    notes: List[str]
+
+
+class YouTubeOAuthCallbackResult(BaseModel):
+    success: bool
+    authorization_code_received: bool = False
+    exchange_performed: bool = False
+    access_token_received: bool
+    refresh_token_received: bool
+    expires_in: Optional[int] = None
+    scope: Optional[str] = None
+    token_type: Optional[str] = None
+    notes: List[str]
+
+
 class SourceItem(BaseModel):
     id: str
     name: str
