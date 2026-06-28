@@ -129,6 +129,36 @@ class LinkedInOAuthCallbackResult(BaseModel):
     notes: List[str]
 
 
+class DiscordBot(BaseModel):
+    id: str
+    username: str
+
+
+class DiscordGuild(BaseModel):
+    id: str
+    name: Optional[str] = None
+
+
+class DiscordChannel(BaseModel):
+    id: str
+    name: Optional[str] = None
+    channel_type: Optional[int] = None
+
+
+class DiscordStatus(BaseModel):
+    configured: bool
+    connected: bool
+    bot_token_configured: bool
+    application_id_configured: bool
+    public_key_configured: bool
+    guild_id_configured: bool
+    alerts_channel_id_configured: bool
+    bot: Optional[DiscordBot] = None
+    guild: Optional[DiscordGuild] = None
+    alerts_channel: Optional[DiscordChannel] = None
+    notes: List[str]
+
+
 class SourceItem(BaseModel):
     id: str
     name: str

@@ -2,6 +2,7 @@ from fastapi.testclient import TestClient
 
 from app.main import app
 from app.services.buffer_client import BufferClient
+from app.services.discord_client import DiscordClient
 from app.services.linkedin_client import LinkedInClient
 from app.services.meta_client import MetaClient
 
@@ -102,6 +103,24 @@ def test_linkedin_client_without_token() -> None:
     assert status.configured is False
     assert status.connected is False
     assert status.access_token_configured is False
+
+
+def test_discord_status_route() -> None:
+    response = client.get("/integrations/discord/status")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert "configured" in payload
+    assert "bot_token_configured" in payload
+    assert isinstance(payload["notes"], list)
+
+
+def test_discord_client_without_token() -> None:
+    status = DiscordClient().status()
+
+    assert status.configured is False
+    assert status.connected is False
+    assert status.bot_token_configured is False
 
 
 def test_generate_draft_without_key() -> None:

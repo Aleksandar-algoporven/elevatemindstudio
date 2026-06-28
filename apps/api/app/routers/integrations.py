@@ -2,8 +2,16 @@ from typing import Optional
 
 from fastapi import APIRouter, HTTPException, Query
 
-from app.models import BufferStatus, LinkedInAuthorizationUrl, LinkedInOAuthCallbackResult, LinkedInStatus, MetaStatus
+from app.models import (
+    BufferStatus,
+    DiscordStatus,
+    LinkedInAuthorizationUrl,
+    LinkedInOAuthCallbackResult,
+    LinkedInStatus,
+    MetaStatus,
+)
 from app.services.buffer_client import get_buffer_status
+from app.services.discord_client import get_discord_status
 from app.services.linkedin_client import get_linkedin_authorization_url, get_linkedin_status
 from app.services.meta_client import get_meta_status
 
@@ -52,3 +60,8 @@ def linkedin_oauth_callback(
             "Copy the code query parameter from the browser address bar so Codex can exchange it locally and write tokens without displaying them.",
         ],
     )
+
+
+@router.get("/discord/status", response_model=DiscordStatus)
+def discord_status() -> DiscordStatus:
+    return get_discord_status()

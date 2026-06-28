@@ -26,6 +26,11 @@ class Settings:
     linkedin_redirect_uri: str = os.getenv("LINKEDIN_REDIRECT_URI", "")
     linkedin_access_token: str = os.getenv("LINKEDIN_ACCESS_TOKEN", "")
     linkedin_refresh_token: str = os.getenv("LINKEDIN_REFRESH_TOKEN", "")
+    discord_bot_token: str = os.getenv("DISCORD_BOT_TOKEN", "")
+    discord_application_id: str = os.getenv("DISCORD_APPLICATION_ID", "")
+    discord_public_key: str = os.getenv("DISCORD_PUBLIC_KEY", "")
+    discord_guild_id: str = os.getenv("DISCORD_GUILD_ID", "")
+    discord_alerts_channel_id: str = os.getenv("DISCORD_ALERTS_CHANNEL_ID", "")
 
 
 settings = Settings()
