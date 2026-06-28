@@ -1,128 +1,95 @@
-import { Sidebar } from "@/components/sidebar";
-import { StatusPill } from "@/components/status-pill";
-import { calendar, drafts, overview, sourceHealth } from "@/lib/data";
+import Link from "next/link";
 
-const stats = [
-  { label: "Sources", value: overview.connectedSources, icon: "SO" },
-  { label: "Channels", value: overview.connectedChannels, icon: "CH" },
-  { label: "Review", value: overview.draftsInReview, icon: "RV" },
-  { label: "Risk", value: overview.riskFlags, icon: "RK" }
+const capabilities = [
+  "Brand source library",
+  "AI draft generation",
+  "Approval workflow",
+  "Publishing calendar",
+  "Inbox and alerts",
+  "Channel integrations"
 ];
 
 export default function Home() {
   return (
-    <main className="appShell">
-      <Sidebar />
-      <section className="workspace">
-        <header className="topbar">
-          <div>
-            <p className="eyebrow">ElevateMindStudio</p>
-            <h1>Social media control room</h1>
-          </div>
-          <div className="modeBadge">
-            <span className="modeDot" aria-hidden="true" />
-            <span>{overview.mode}</span>
-          </div>
-        </header>
+    <main className="publicShell">
+      <header className="siteNav">
+        <Link className="siteBrand" href="/" aria-label="ElevateMindStudio home">
+          <span className="siteBrandMark" aria-hidden="true">EM</span>
+          <span>ElevateMindStudio</span>
+        </Link>
+        <nav aria-label="Legal pages">
+          <Link href="/privacy">Privacy</Link>
+          <Link href="/terms">Terms</Link>
+        </nav>
+      </header>
 
-        <section className="summaryGrid" aria-label="Workspace summary">
-          <div className="heroPanel">
-            <div className="heroCopy">
-              <p className="eyebrow">Flagship brand</p>
-              <h2>{overview.brand}</h2>
-              <p>
-                Source-backed campaigns, channel-specific drafts, approval queues, and inbox intelligence in one operational view.
-              </p>
-            </div>
-            <div className="signalStack" aria-label="Pipeline status">
-              <span>Source brain</span>
-              <span>Draft factory</span>
-              <span>Approval queue</span>
-              <span>Publishing grid</span>
-            </div>
+      <section className="publicHero" aria-labelledby="hero-title">
+        <div className="heroTextBlock">
+          <p className="eyebrow">Social media operating system</p>
+          <h1 id="hero-title">ElevateMindStudio</h1>
+          <p>
+            ElevateMindStudio helps teams turn approved brand sources into reviewed drafts, scheduled posts, and channel-ready social media operations.
+          </p>
+          <div className="heroActions" aria-label="Primary links">
+            <Link className="primaryLink" href="/privacy">Privacy Policy</Link>
+            <Link className="secondaryLink" href="/terms">Terms of Service</Link>
           </div>
+        </div>
 
-          <div className="statGrid">
-            {stats.map((stat) => (
-              <article className="statCard" key={stat.label}>
-                <span className="statIcon" aria-hidden="true">{stat.icon}</span>
-                <strong>{stat.value}</strong>
-                <span>{stat.label}</span>
-              </article>
-            ))}
+        <div className="productSurface" aria-label="ElevateMindStudio product overview">
+          <div className="productTopbar">
+            <span>AlgoProven campaign</span>
+            <strong>Approval required</strong>
           </div>
-        </section>
-
-        <section className="contentGrid">
-          <div className="panel largePanel">
-            <div className="panelHeader">
-              <div>
-                <p className="eyebrow">Review queue</p>
-                <h2>Drafts waiting on decision</h2>
-              </div>
-              <button className="iconButton" type="button" title="Generate draft">
-                AI
-              </button>
-            </div>
-            <div className="draftList">
-              {drafts.map((draft) => (
-                <article className="draftRow" key={draft.id}>
-                  <div>
-                    <div className="draftTitleLine">
-                      <h3>{draft.title}</h3>
-                      <StatusPill tone={draft.approvalState}>{draft.approvalState.replace("_", " ")}</StatusPill>
-                    </div>
-                    <p>{draft.copy}</p>
-                    <div className="metaLine">
-                      <span>{draft.channel}</span>
-                      <span>{draft.pillar}</span>
-                      <StatusPill tone={draft.riskLevel}>{draft.riskLevel} risk</StatusPill>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
+          <div className="pipelineGrid">
+            <span>Sources</span>
+            <span>Drafts</span>
+            <span>Review</span>
+            <span>Calendar</span>
           </div>
-
-          <aside className="panel">
-            <div className="panelHeader compact">
-              <div>
-                <p className="eyebrow">Source health</p>
-                <h2>Inputs</h2>
-              </div>
-            </div>
-            <div className="sourceList">
-              {sourceHealth.map((source) => (
-                <div className="sourceRow" key={source.name}>
-                  <div>
-                    <strong>{source.name}</strong>
-                    <span>{source.count}</span>
-                  </div>
-                  <StatusPill tone={source.status as "ready" | "manual" | "pending"}>{source.status}</StatusPill>
-                </div>
-              ))}
-            </div>
-          </aside>
-        </section>
-
-        <section className="panel calendarPanel">
-          <div className="panelHeader">
+          <div className="reviewList">
             <div>
-              <p className="eyebrow">Publishing grid</p>
-              <h2>Next five operating days</h2>
+              <strong>Source-backed LinkedIn draft</strong>
+              <span>Needs review</span>
+            </div>
+            <div>
+              <strong>Discord alert digest</strong>
+              <span>Ready</span>
             </div>
           </div>
-          <div className="calendarGrid">
-            {calendar.map((item) => (
-              <article className="calendarDay" key={item.day}>
-                <span>{item.day}</span>
-                <strong>{item.posts}</strong>
-                <p>{item.focus}</p>
-              </article>
-            ))}
-          </div>
-        </section>
+        </div>
       </section>
+
+      <section className="publicBand" aria-labelledby="platform-title">
+        <div>
+          <p className="eyebrow">Platform</p>
+          <h2 id="platform-title">One workspace for social content operations.</h2>
+        </div>
+        <div className="capabilityGrid">
+          {capabilities.map((capability) => (
+            <span key={capability}>{capability}</span>
+          ))}
+        </div>
+      </section>
+
+      <section className="publicBand mutedBand" aria-labelledby="access-title">
+        <div>
+          <p className="eyebrow">Private beta</p>
+          <h2 id="access-title">Built for owned brands and managed client campaigns.</h2>
+        </div>
+        <p>
+          ElevateMindStudio connects to third-party platforms only with authorized access and uses those integrations to prepare, review, schedule, publish, and monitor content for approved workspaces.
+        </p>
+      </section>
+
+      <footer className="siteFooter">
+        <span>© 2026 ElevateMindStudio</span>
+        <div>
+          <Link href="/privacy">Privacy Policy</Link>
+          <Link href="/terms">Terms of Service</Link>
+          <a href="mailto:support@elevatemindstudio.net">Contact</a>
+        </div>
+      </footer>
     </main>
   );
 }
