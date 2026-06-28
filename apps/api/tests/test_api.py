@@ -1,4 +1,5 @@
 from fastapi.testclient import TestClient
+from app.routers import integrations
 
 from app.main import app
 from app.services.buffer_client import BufferClient
@@ -70,6 +71,43 @@ def test_meta_client_without_token() -> None:
     assert status.configured is False
     assert status.connected is False
     assert status.system_user_token_configured is False
+
+
+def test_meta_webhook_verification() -> None:
+    original_token = integrations.settings.meta_webhook_verify_token
+    object.__setattr__(integrations.settings, "meta_webhook_verify_token", "verify-token")
+    try:
+        response = client.get(
+            "/integrations/meta/webhook",
+            params={
+                "hub.mode": "subscribe",
+                "hub.verify_token": "verify-token",
+                "hub.challenge": "challenge-123",
+            },
+        )
+    finally:
+        object.__setattr__(integrations.settings, "meta_webhook_verify_token", original_token)
+
+    assert response.status_code == 200
+    assert response.text == "challenge-123"
+
+
+def test_meta_webhook_rejects_invalid_token() -> None:
+    original_token = integrations.settings.meta_webhook_verify_token
+    object.__setattr__(integrations.settings, "meta_webhook_verify_token", "verify-token")
+    try:
+        response = client.get(
+            "/integrations/meta/webhook",
+            params={
+                "hub.mode": "subscribe",
+                "hub.verify_token": "wrong-token",
+                "hub.challenge": "challenge-123",
+            },
+        )
+    finally:
+        object.__setattr__(integrations.settings, "meta_webhook_verify_token", original_token)
+
+    assert response.status_code == 403
 
 
 def test_linkedin_status_route() -> None:

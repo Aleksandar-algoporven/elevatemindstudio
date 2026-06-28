@@ -1,6 +1,7 @@
 from typing import Optional
 
 from fastapi import APIRouter, HTTPException, Query
+from fastapi.responses import PlainTextResponse
 
 from app.models import (
     BufferStatus,
@@ -18,6 +19,7 @@ from app.services.discord_client import get_discord_status
 from app.services.linkedin_client import get_linkedin_authorization_url, get_linkedin_status
 from app.services.meta_client import get_meta_status
 from app.services.youtube_client import get_youtube_authorization_url, get_youtube_status
+from app.settings import settings
 
 
 router = APIRouter(prefix="/integrations", tags=["integrations"])
@@ -31,6 +33,26 @@ def buffer_status() -> BufferStatus:
 @router.get("/meta/status", response_model=MetaStatus)
 def meta_status() -> MetaStatus:
     return get_meta_status()
+
+
+@router.get("/meta/webhook", response_class=PlainTextResponse)
+def meta_webhook_verify(
+    hub_mode: Optional[str] = Query(default=None, alias="hub.mode"),
+    hub_verify_token: Optional[str] = Query(default=None, alias="hub.verify_token"),
+    hub_challenge: Optional[str] = Query(default=None, alias="hub.challenge"),
+) -> PlainTextResponse:
+    if hub_mode != "subscribe" or not hub_challenge:
+        raise HTTPException(status_code=400, detail="Invalid Meta webhook verification request.")
+    if not settings.meta_webhook_verify_token:
+        raise HTTPException(status_code=503, detail="META_WEBHOOK_VERIFY_TOKEN is not configured.")
+    if hub_verify_token != settings.meta_webhook_verify_token:
+        raise HTTPException(status_code=403, detail="Invalid Meta webhook verify token.")
+    return PlainTextResponse(hub_challenge)
+
+
+@router.post("/meta/webhook")
+def meta_webhook_receive() -> dict[str, bool]:
+    return {"received": True}
 
 
 @router.get("/linkedin/status", response_model=LinkedInStatus)
