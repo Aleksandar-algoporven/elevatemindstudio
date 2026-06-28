@@ -2,7 +2,7 @@ from typing import Any, Dict, List, Optional
 
 import httpx
 
-from app.models import BufferChannel, BufferStatus
+from app.models import BufferChannel, BufferPublishRequest, BufferPublishResult, BufferPublishTarget, BufferStatus
 from app.settings import settings
 
 
@@ -37,6 +37,13 @@ query BufferChannels($input: ChannelsInput!) {
   }
 }
 """
+
+
+BUFFER_SERVICE_BY_CHANNEL = {
+    "instagram": "instagram",
+    "youtube": "youtube",
+    "x": "twitter",
+}
 
 
 class BufferClient:
@@ -110,6 +117,62 @@ class BufferClient:
                 notes=[f"Buffer API check failed: {exc.__class__.__name__}."],
             )
 
+    def publish(self, request: BufferPublishRequest) -> BufferPublishResult:
+        status = self.status()
+        notes = list(status.notes)
+        service = BUFFER_SERVICE_BY_CHANNEL.get(request.channel)
+        if not service:
+            return BufferPublishResult(
+                accepted=False,
+                dry_run=request.dry_run,
+                channel=request.channel,
+                scheduled_at=request.scheduled_at,
+                text_length=len(request.text),
+                notes=notes + [f"Buffer publishing is not mapped for channel '{request.channel}'."],
+            )
+
+        if not status.connected:
+            return BufferPublishResult(
+                accepted=False,
+                dry_run=request.dry_run,
+                channel=request.channel,
+                scheduled_at=request.scheduled_at,
+                text_length=len(request.text),
+                notes=notes + ["Buffer is not connected."],
+            )
+
+        target = self._select_publish_channel(status.channels, service)
+        if target is None:
+            return BufferPublishResult(
+                accepted=False,
+                dry_run=request.dry_run,
+                channel=request.channel,
+                scheduled_at=request.scheduled_at,
+                text_length=len(request.text),
+                notes=notes + [f"No Buffer channel with publish access was found for service '{service}'."],
+            )
+
+        if not request.dry_run:
+            return BufferPublishResult(
+                accepted=False,
+                dry_run=False,
+                channel=request.channel,
+                target=target,
+                scheduled_at=request.scheduled_at,
+                text_length=len(request.text),
+                notes=notes + ["Real Buffer publishing is disabled until the dry-run workflow is approved."],
+            )
+
+        return BufferPublishResult(
+            accepted=True,
+            dry_run=True,
+            channel=request.channel,
+            target=target,
+            scheduled_at=request.scheduled_at,
+            text_length=len(request.text),
+            notes=notes + ["Dry run only. No content was sent to Buffer."],
+        )
+
     def _graphql(self, query: str, variables: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         with httpx.Client(timeout=self.timeout) as client:
             response = client.post(
@@ -152,9 +215,32 @@ class BufferClient:
             products=channel.get("products") or [],
         )
 
+    def _select_publish_channel(self, channels: List[BufferChannel], service: str) -> Optional[BufferPublishTarget]:
+        for channel in channels:
+            if channel.service != service:
+                continue
+            if channel.is_disconnected or channel.is_locked:
+                continue
+            if "publish" not in channel.products:
+                continue
+            return BufferPublishTarget(
+                channel_id=channel.id,
+                service=channel.service,
+                name=channel.name,
+                display_name=channel.display_name,
+            )
+        return None
+
 
 def get_buffer_status() -> BufferStatus:
     return BufferClient(
         access_token=settings.buffer_access_token,
         organization_id=settings.buffer_organization_id,
     ).status()
+
+
+def publish_to_buffer(request: BufferPublishRequest) -> BufferPublishResult:
+    return BufferClient(
+        access_token=settings.buffer_access_token,
+        organization_id=settings.buffer_organization_id,
+    ).publish(request)

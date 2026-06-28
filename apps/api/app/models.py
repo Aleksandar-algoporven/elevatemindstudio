@@ -68,6 +68,30 @@ class BufferStatus(BaseModel):
     notes: List[str]
 
 
+class BufferPublishRequest(BaseModel):
+    channel: Channel
+    text: str = Field(min_length=1, max_length=5000)
+    scheduled_at: Optional[str] = None
+    dry_run: bool = True
+
+
+class BufferPublishTarget(BaseModel):
+    channel_id: str
+    service: str
+    name: str
+    display_name: str
+
+
+class BufferPublishResult(BaseModel):
+    accepted: bool
+    dry_run: bool
+    channel: Channel
+    target: Optional[BufferPublishTarget] = None
+    scheduled_at: Optional[str] = None
+    text_length: int
+    notes: List[str]
+
+
 class MetaAsset(BaseModel):
     id: str
     name: Optional[str] = None

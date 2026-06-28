@@ -2,6 +2,7 @@ from fastapi.testclient import TestClient
 from app.routers import integrations
 
 from app.main import app
+from app.models import BufferChannel, BufferPublishRequest, BufferStatus
 from app.services.buffer_client import BufferClient
 from app.services.discord_client import DiscordClient
 from app.services.linkedin_client import LinkedInClient
@@ -53,6 +54,64 @@ def test_buffer_client_without_token() -> None:
     assert status.configured is False
     assert status.connected is False
     assert status.channels_count == 0
+
+
+def test_buffer_publish_dry_run_selects_channel() -> None:
+    buffer_client = BufferClient(access_token="token")
+    buffer_client.status = lambda: BufferStatus(
+        configured=True,
+        connected=True,
+        channels_count=1,
+        channels=[
+            BufferChannel(
+                id="channel-1",
+                service="twitter",
+                name="AlgoProven",
+                display_name="AlgoProven",
+                is_disconnected=False,
+                is_locked=False,
+                allowed_actions=[],
+                products=["publish"],
+            )
+        ],
+        notes=[],
+    )
+
+    result = buffer_client.publish(BufferPublishRequest(channel="x", text="Approved draft", dry_run=True))
+
+    assert result.accepted is True
+    assert result.dry_run is True
+    assert result.target is not None
+    assert result.target.channel_id == "channel-1"
+
+
+def test_buffer_publish_real_publish_is_disabled() -> None:
+    buffer_client = BufferClient(access_token="token")
+    buffer_client.status = lambda: BufferStatus(
+        configured=True,
+        connected=True,
+        channels_count=1,
+        channels=[
+            BufferChannel(
+                id="channel-1",
+                service="instagram",
+                name="algoproven",
+                display_name="algoproven",
+                is_disconnected=False,
+                is_locked=False,
+                allowed_actions=[],
+                products=["publish"],
+            )
+        ],
+        notes=[],
+    )
+
+    result = buffer_client.publish(BufferPublishRequest(channel="instagram", text="Approved draft", dry_run=False))
+
+    assert result.accepted is False
+    assert result.dry_run is False
+    assert result.target is not None
+    assert "disabled" in result.notes[-1]
 
 
 def test_meta_status_route() -> None:

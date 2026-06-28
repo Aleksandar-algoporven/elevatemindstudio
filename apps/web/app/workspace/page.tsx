@@ -1,0 +1,324 @@
+import Link from "next/link";
+
+export const dynamic = "force-dynamic";
+
+type IntegrationSummary = {
+  name: string;
+  state: "connected" | "partial" | "blocked";
+  detail: string;
+  notes: string[];
+};
+
+type BufferChannel = {
+  id: string;
+  service: string;
+  display_name: string;
+  products: string[];
+  is_disconnected: boolean;
+  is_locked: boolean;
+};
+
+type BufferStatus = {
+  connected: boolean;
+  channels_count: number;
+  channels: BufferChannel[];
+  notes: string[];
+};
+
+type YouTubeStatus = {
+  connected: boolean;
+  channel?: {
+    title?: string;
+    custom_url?: string;
+  } | null;
+  notes: string[];
+};
+
+type DiscordStatus = {
+  connected: boolean;
+  guild_id_configured: boolean;
+  alerts_channel_id_configured: boolean;
+  bot?: {
+    username: string;
+  } | null;
+  notes: string[];
+};
+
+type LinkedInStatus = {
+  connected: boolean;
+  notes: string[];
+};
+
+type Draft = {
+  id: string;
+  title: string;
+  channel: string;
+  approval_state: string;
+  risk_level: string;
+  copy_text: string;
+  scheduled_for?: string | null;
+};
+
+type SourceItem = {
+  id: string;
+  name: string;
+  source_type: string;
+  status: string;
+  item_count: number;
+};
+
+type PublishPlan = {
+  accepted: boolean;
+  dry_run: boolean;
+  target?: {
+    service: string;
+    display_name: string;
+  } | null;
+  notes: string[];
+};
+
+const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || "https://api.elevatemindstudio.net";
+
+async function fetchJson<T>(path: string, init?: RequestInit): Promise<T | null> {
+  try {
+    const response = await fetch(`${apiBase}${path}`, {
+      ...init,
+      cache: "no-store",
+      headers: {
+        "Content-Type": "application/json",
+        ...(init?.headers || {})
+      }
+    });
+    if (!response.ok) {
+      return null;
+    }
+    return (await response.json()) as T;
+  } catch {
+    return null;
+  }
+}
+
+function summarizeIntegration(status: {
+  name: string;
+  connected?: boolean;
+  partial?: boolean;
+  detail: string;
+  notes?: string[];
+}): IntegrationSummary {
+  return {
+    name: status.name,
+    state: status.connected ? "connected" : status.partial ? "partial" : "blocked",
+    detail: status.detail,
+    notes: status.notes || []
+  };
+}
+
+export default async function WorkspacePage() {
+  const [buffer, youtube, discord, linkedin, drafts, sources, publishPlan] = await Promise.all([
+    fetchJson<BufferStatus>("/integrations/buffer/status"),
+    fetchJson<YouTubeStatus>("/integrations/youtube/status"),
+    fetchJson<DiscordStatus>("/integrations/discord/status"),
+    fetchJson<LinkedInStatus>("/integrations/linkedin/status"),
+    fetchJson<Draft[]>("/drafts"),
+    fetchJson<SourceItem[]>("/sources"),
+    fetchJson<PublishPlan>("/integrations/buffer/publish", {
+      method: "POST",
+      body: JSON.stringify({
+        channel: "x",
+        text: "Dry-run validation from ElevateMindStudio workspace.",
+        dry_run: true
+      })
+    })
+  ]);
+
+  const integrations = [
+    summarizeIntegration({
+      name: "Buffer",
+      connected: buffer?.connected,
+      detail: buffer ? `${buffer.channels_count} channels connected` : "Status unavailable",
+      notes: buffer?.notes
+    }),
+    summarizeIntegration({
+      name: "YouTube",
+      connected: youtube?.connected,
+      detail: youtube?.channel?.custom_url || youtube?.channel?.title || "Waiting for OAuth",
+      notes: youtube?.notes
+    }),
+    summarizeIntegration({
+      name: "Discord",
+      connected: Boolean(discord?.connected && discord.guild_id_configured && discord.alerts_channel_id_configured),
+      partial: discord?.connected,
+      detail: discord?.bot?.username ? `Bot ${discord.bot.username}` : "Bot not connected",
+      notes: discord?.notes
+    }),
+    summarizeIntegration({
+      name: "LinkedIn",
+      connected: linkedin?.connected,
+      partial: Boolean(linkedin),
+      detail: linkedin?.connected ? "Organization API connected" : "Community API approval pending",
+      notes: linkedin?.notes
+    })
+  ];
+
+  const reviewDrafts = drafts || [];
+  const sourceItems = sources || [];
+  const readyChannels = buffer?.channels.filter((channel) => channel.products.includes("publish")) || [];
+
+  return (
+    <main className="workspaceShell">
+      <aside className="workspaceRail">
+        <Link className="siteBrand workspaceBrand" href="/">
+          <span className="siteBrandMark" aria-hidden="true">EM</span>
+          <span>ElevateMindStudio</span>
+        </Link>
+        <nav aria-label="Workspace sections">
+          <a href="#overview">Overview</a>
+          <a href="#review">Review</a>
+          <a href="#connectors">Connectors</a>
+          <a href="#publish">Publish</a>
+        </nav>
+      </aside>
+
+      <section className="workspaceMain">
+        <header className="workspaceHeader" id="overview">
+          <div>
+            <p className="eyebrow">AlgoProven control room</p>
+            <h1>Build, review, publish.</h1>
+            <p>Source-backed social media operations for the first ElevateMindStudio brand workspace.</p>
+          </div>
+          <Link className="secondaryLink" href="/">Public Site</Link>
+        </header>
+
+        <section className="opsGrid" aria-label="Operating metrics">
+          <article>
+            <span>Buffer channels</span>
+            <strong>{buffer?.channels_count ?? "-"}</strong>
+          </article>
+          <article>
+            <span>Drafts</span>
+            <strong>{reviewDrafts.length}</strong>
+          </article>
+          <article>
+            <span>Sources</span>
+            <strong>{sourceItems.length}</strong>
+          </article>
+          <article>
+            <span>Publish dry-run</span>
+            <strong>{publishPlan?.accepted ? "Ready" : "Blocked"}</strong>
+          </article>
+        </section>
+
+        <section className="workspaceGrid">
+          <div className="workspacePanel largePanel" id="review">
+            <div className="workspacePanelHeader">
+              <div>
+                <p className="eyebrow">Review queue</p>
+                <h2>Drafts before reach</h2>
+              </div>
+              <span className="smallBadge">Autonomy 1</span>
+            </div>
+            <div className="workspaceList">
+              {reviewDrafts.map((draft) => (
+                <article className="workspaceItem" key={draft.id}>
+                  <div className="itemTitleLine">
+                    <h3>{draft.title}</h3>
+                    <span className={`statusChip status-${draft.approval_state.replace("_", "-")}`}>
+                      {draft.approval_state.replace("_", " ")}
+                    </span>
+                  </div>
+                  <p>{draft.copy_text}</p>
+                  <div className="itemMeta">
+                    <span>{draft.channel}</span>
+                    <span>{draft.risk_level} risk</span>
+                    <span>{draft.scheduled_for || "unscheduled"}</span>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+
+          <aside className="workspacePanel" id="connectors">
+            <div className="workspacePanelHeader compact">
+              <div>
+                <p className="eyebrow">Connectors</p>
+                <h2>Live status</h2>
+              </div>
+            </div>
+            <div className="connectorList">
+              {integrations.map((integration) => (
+                <article className="connectorRow" key={integration.name}>
+                  <div>
+                    <strong>{integration.name}</strong>
+                    <span>{integration.detail}</span>
+                  </div>
+                  <span className={`statusChip connector-${integration.state}`}>{integration.state}</span>
+                </article>
+              ))}
+            </div>
+          </aside>
+        </section>
+
+        <section className="workspaceGrid">
+          <div className="workspacePanel" id="publish">
+            <div className="workspacePanelHeader">
+              <div>
+                <p className="eyebrow">Buffer dry-run</p>
+                <h2>Publish route validation</h2>
+              </div>
+            </div>
+            <div className="publishPreview">
+              <div>
+                <span>Target</span>
+                <strong>{publishPlan?.target?.display_name || "No target"}</strong>
+              </div>
+              <div>
+                <span>Service</span>
+                <strong>{publishPlan?.target?.service || "n/a"}</strong>
+              </div>
+              <div>
+                <span>Status</span>
+                <strong>{publishPlan?.accepted ? "Accepted" : "Blocked"}</strong>
+              </div>
+            </div>
+            <p className="panelNote">{publishPlan?.notes?.[0] || "Dry-run status unavailable."}</p>
+          </div>
+
+          <div className="workspacePanel">
+            <div className="workspacePanelHeader">
+              <div>
+                <p className="eyebrow">Source memory</p>
+                <h2>Inputs in use</h2>
+              </div>
+            </div>
+            <div className="sourceMatrix">
+              {sourceItems.map((source) => (
+                <article key={source.id}>
+                  <strong>{source.name}</strong>
+                  <span>{source.source_type}</span>
+                  <span>{source.status} · {source.item_count} items</span>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="workspacePanel">
+          <div className="workspacePanelHeader">
+            <div>
+              <p className="eyebrow">Publishing bridge</p>
+              <h2>Channels ready through Buffer</h2>
+            </div>
+          </div>
+          <div className="channelStrip">
+            {readyChannels.map((channel) => (
+              <article key={channel.id}>
+                <strong>{channel.display_name}</strong>
+                <span>{channel.service}</span>
+              </article>
+            ))}
+          </div>
+        </section>
+      </section>
+    </main>
+  );
+}

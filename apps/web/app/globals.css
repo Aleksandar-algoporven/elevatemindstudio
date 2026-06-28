@@ -265,6 +265,41 @@ a {
   font-weight: 800;
 }
 
+.workflowList {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: workflow;
+}
+
+.workflowList li {
+  counter-increment: workflow;
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  min-height: 58px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  font-weight: 800;
+}
+
+.workflowList li::before {
+  content: counter(workflow, decimal-leading-zero);
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: #17201f;
+  color: #ffffff;
+  font-size: 12px;
+}
+
 .siteFooter {
   margin-top: auto;
   padding: 22px 32px;
@@ -315,6 +350,280 @@ a {
 .legalDocument p {
   color: #33413f;
   line-height: 1.72;
+}
+
+.workspaceShell {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  min-height: 100vh;
+  background: #eef2ee;
+}
+
+.workspaceRail {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  height: 100vh;
+  padding: 22px;
+  border-right: 1px solid #d6ded8;
+  background: #111717;
+  color: #f7faf8;
+}
+
+.workspaceBrand {
+  color: #f7faf8;
+}
+
+.workspaceRail nav {
+  display: grid;
+  gap: 8px;
+}
+
+.workspaceRail nav a {
+  min-height: 42px;
+  padding: 12px;
+  border-radius: 8px;
+  color: rgba(247, 250, 248, 0.72);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.workspaceRail nav a:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.workspaceMain {
+  display: grid;
+  gap: 18px;
+  padding: 26px;
+}
+
+.workspaceHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 28px;
+  border: 1px solid #d6ded8;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 18px 50px rgba(23, 32, 31, 0.08);
+}
+
+.workspaceHeader h1,
+.workspacePanel h2,
+.workspaceItem h3 {
+  margin: 0;
+  letter-spacing: 0;
+}
+
+.workspaceHeader h1 {
+  font-size: 44px;
+  line-height: 1;
+}
+
+.workspaceHeader p:not(.eyebrow) {
+  max-width: 760px;
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+.opsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.opsGrid article,
+.workspacePanel {
+  border: 1px solid #d6ded8;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 16px 42px rgba(23, 32, 31, 0.07);
+}
+
+.opsGrid article {
+  min-height: 112px;
+  padding: 18px;
+}
+
+.opsGrid span,
+.publishPreview span,
+.sourceMatrix span,
+.channelStrip span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.opsGrid strong {
+  display: block;
+  margin-top: 16px;
+  font-size: 30px;
+  line-height: 1;
+}
+
+.workspaceGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 390px;
+  gap: 18px;
+}
+
+.workspacePanel {
+  padding: 20px;
+}
+
+.workspacePanelHeader,
+.itemTitleLine,
+.connectorRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.workspacePanelHeader {
+  margin-bottom: 16px;
+}
+
+.workspacePanelHeader h2 {
+  font-size: 22px;
+}
+
+.smallBadge,
+.statusChip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: capitalize;
+}
+
+.smallBadge {
+  background: #edf5f1;
+  color: var(--teal);
+}
+
+.workspaceList,
+.connectorList,
+.sourceMatrix {
+  display: grid;
+  gap: 12px;
+}
+
+.workspaceItem,
+.connectorRow,
+.sourceMatrix article,
+.channelStrip article {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcfb;
+}
+
+.workspaceItem {
+  padding: 16px;
+}
+
+.workspaceItem h3 {
+  font-size: 17px;
+}
+
+.workspaceItem p,
+.panelNote {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.itemMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.itemMeta span {
+  padding: 5px 8px;
+  border-radius: 8px;
+  background: #eef4f1;
+  color: #33413f;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.status-approved,
+.connector-connected {
+  background: #e7f5ee;
+  color: var(--green);
+}
+
+.status-needs-review,
+.status-draft,
+.connector-partial {
+  background: #fff3d6;
+  color: var(--amber);
+}
+
+.connector-blocked {
+  background: #ffe9e6;
+  color: var(--red);
+}
+
+.connectorRow {
+  padding: 14px;
+}
+
+.connectorRow div {
+  display: grid;
+  gap: 4px;
+}
+
+.connectorRow span:not(.statusChip) {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.publishPreview {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.publishPreview div {
+  display: grid;
+  gap: 10px;
+  min-height: 88px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcfb;
+}
+
+.publishPreview strong {
+  font-size: 18px;
+}
+
+.sourceMatrix {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.sourceMatrix article,
+.channelStrip article {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+}
+
+.channelStrip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
 }
 
 .appShell {
@@ -711,12 +1020,19 @@ a {
 
 @media (max-width: 1050px) {
   .summaryGrid,
-  .contentGrid {
+  .contentGrid,
+  .workspaceGrid {
     grid-template-columns: 1fr;
   }
 
   .contentGrid {
     grid-template-columns: 1fr;
+  }
+
+  .opsGrid,
+  .publishPreview,
+  .channelStrip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -764,6 +1080,39 @@ a {
 
   .legalDocument h1 {
     font-size: 40px;
+  }
+
+  .workspaceShell {
+    grid-template-columns: 1fr;
+  }
+
+  .workspaceRail {
+    position: static;
+    height: auto;
+  }
+
+  .workspaceRail nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .workspaceMain {
+    padding: 18px;
+  }
+
+  .workspaceHeader {
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .workspaceHeader h1 {
+    font-size: 36px;
+  }
+
+  .opsGrid,
+  .publishPreview,
+  .sourceMatrix,
+  .channelStrip {
+    grid-template-columns: 1fr;
   }
 
   .appShell {

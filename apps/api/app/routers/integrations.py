@@ -4,6 +4,8 @@ from fastapi import APIRouter, HTTPException, Query
 from fastapi.responses import PlainTextResponse
 
 from app.models import (
+    BufferPublishRequest,
+    BufferPublishResult,
     BufferStatus,
     DiscordStatus,
     LinkedInAuthorizationUrl,
@@ -14,7 +16,7 @@ from app.models import (
     YouTubeOAuthCallbackResult,
     YouTubeStatus,
 )
-from app.services.buffer_client import get_buffer_status
+from app.services.buffer_client import get_buffer_status, publish_to_buffer
 from app.services.discord_client import get_discord_status
 from app.services.linkedin_client import get_linkedin_authorization_url, get_linkedin_status
 from app.services.meta_client import get_meta_status
@@ -28,6 +30,11 @@ router = APIRouter(prefix="/integrations", tags=["integrations"])
 @router.get("/buffer/status", response_model=BufferStatus)
 def buffer_status() -> BufferStatus:
     return get_buffer_status()
+
+
+@router.post("/buffer/publish", response_model=BufferPublishResult)
+def buffer_publish(request: BufferPublishRequest) -> BufferPublishResult:
+    return publish_to_buffer(request)
 
 
 @router.get("/meta/status", response_model=MetaStatus)

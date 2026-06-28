@@ -46,10 +46,23 @@ python3 -m pytest
 - `GET /sources`
 - `GET /inbox`
 - `POST /approvals/drafts/{draft_id}`
+- `GET /integrations/buffer/status`
+- `POST /integrations/buffer/publish`
+- `GET /integrations/youtube/status`
+- `GET /integrations/discord/status`
+- `GET /integrations/linkedin/status`
+- `GET /integrations/meta/status`
 
-## Known Build Note
+## Web Routes
 
-`npm run typecheck --workspace apps/web` and `npm run lint --workspace apps/web` pass. `npm run build --workspace apps/web` is currently blocked by a Next/React dependency mismatch introduced while trying to update Next to a patched audit-safe version. Finish by installing a clean Next patch line, then rerun build and `npm audit`.
+- `/`: public product site.
+- `/workspace`: operator control room.
+- `/privacy`: Privacy Policy.
+- `/terms`: Terms of Service.
+
+## Current Build Note
+
+`npm run typecheck`, `npm run lint`, and `npm run build` should pass before every deploy. API tests should be run from `apps/api` with `.venv/bin/python -m pytest tests`.
 
 ## Secrets
 

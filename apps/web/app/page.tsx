@@ -1,12 +1,20 @@
 import Link from "next/link";
 
 const capabilities = [
-  "Brand source library",
+  "Source-backed brand memory",
   "AI draft generation",
-  "Approval workflow",
-  "Publishing calendar",
-  "Inbox and alerts",
-  "Channel integrations"
+  "Human approval workflow",
+  "Buffer publishing bridge",
+  "Inbox and alert routing",
+  "Connector health checks"
+];
+
+const operatingSteps = [
+  "Ingest trusted brand sources",
+  "Generate channel-specific drafts",
+  "Review claims and approvals",
+  "Queue approved posts through Buffer",
+  "Monitor replies and alerts"
 ];
 
 export default function Home() {
@@ -18,6 +26,7 @@ export default function Home() {
           <span>ElevateMindStudio</span>
         </Link>
         <nav aria-label="Legal pages">
+          <Link href="/workspace">Workspace</Link>
           <Link href="/privacy">Privacy</Link>
           <Link href="/terms">Terms</Link>
         </nav>
@@ -28,11 +37,11 @@ export default function Home() {
           <p className="eyebrow">Social media operating system</p>
           <h1 id="hero-title">ElevateMindStudio</h1>
           <p>
-            ElevateMindStudio helps teams turn approved brand sources into reviewed drafts, scheduled posts, and channel-ready social media operations.
+            ElevateMindStudio turns trusted brand sources into reviewed drafts, approved publishing queues, and channel-ready social media operations.
           </p>
           <div className="heroActions" aria-label="Primary links">
-            <Link className="primaryLink" href="/privacy">Privacy Policy</Link>
-            <Link className="secondaryLink" href="/terms">Terms of Service</Link>
+            <Link className="primaryLink" href="/workspace">Open Workspace</Link>
+            <Link className="secondaryLink" href="/privacy">Privacy Policy</Link>
           </div>
         </div>
 
@@ -45,16 +54,16 @@ export default function Home() {
             <span>Sources</span>
             <span>Drafts</span>
             <span>Review</span>
-            <span>Calendar</span>
+            <span>Buffer</span>
           </div>
           <div className="reviewList">
             <div>
-              <strong>Source-backed LinkedIn draft</strong>
-              <span>Needs review</span>
+              <strong>AlgoProven campaign spine</strong>
+              <span>Active</span>
             </div>
             <div>
-              <strong>Discord alert digest</strong>
-              <span>Ready</span>
+              <strong>YouTube and Buffer connectors</strong>
+              <span>Connected</span>
             </div>
           </div>
         </div>
@@ -82,9 +91,22 @@ export default function Home() {
         </p>
       </section>
 
+      <section className="publicBand" aria-labelledby="workflow-title">
+        <div>
+          <p className="eyebrow">Operating model</p>
+          <h2 id="workflow-title">Designed around review before reach.</h2>
+        </div>
+        <ol className="workflowList">
+          {operatingSteps.map((step) => (
+            <li key={step}>{step}</li>
+          ))}
+        </ol>
+      </section>
+
       <footer className="siteFooter">
         <span>© 2026 ElevateMindStudio</span>
         <div>
+          <Link href="/workspace">Workspace</Link>
           <Link href="/privacy">Privacy Policy</Link>
           <Link href="/terms">Terms of Service</Link>
           <a href="mailto:support@elevatemindstudio.net">Contact</a>
