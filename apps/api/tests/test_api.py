@@ -80,6 +80,22 @@ def test_linkedin_status_route() -> None:
     assert isinstance(payload["notes"], list)
 
 
+def test_linkedin_authorize_route() -> None:
+    response = client.get("/integrations/linkedin/oauth/authorize")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert "configured" in payload
+    assert "scopes" in payload
+    assert "w_member_social" in payload["scopes"]
+
+
+def test_linkedin_callback_requires_code() -> None:
+    response = client.get("/integrations/linkedin/oauth/callback")
+
+    assert response.status_code == 400
+
+
 def test_linkedin_client_without_token() -> None:
     status = LinkedInClient(api_version="202606").status()
 

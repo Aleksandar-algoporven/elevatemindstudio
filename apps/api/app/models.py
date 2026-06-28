@@ -109,6 +109,26 @@ class LinkedInStatus(BaseModel):
     notes: List[str]
 
 
+class LinkedInAuthorizationUrl(BaseModel):
+    configured: bool
+    authorization_url: Optional[str] = None
+    state: Optional[str] = None
+    scopes: List[str]
+    notes: List[str]
+
+
+class LinkedInOAuthCallbackResult(BaseModel):
+    success: bool
+    authorization_code_received: bool = False
+    exchange_performed: bool = False
+    access_token_received: bool
+    refresh_token_received: bool
+    expires_in: Optional[int] = None
+    scope: Optional[str] = None
+    token_type: Optional[str] = None
+    notes: List[str]
+
+
 class SourceItem(BaseModel):
     id: str
     name: str
