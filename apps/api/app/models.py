@@ -90,6 +90,25 @@ class MetaStatus(BaseModel):
     notes: List[str]
 
 
+class LinkedInOrganization(BaseModel):
+    id: str
+    name: Optional[str] = None
+    vanity_name: Optional[str] = None
+
+
+class LinkedInStatus(BaseModel):
+    configured: bool
+    connected: bool
+    api_version: str
+    app_configured: bool
+    org_id_configured: bool
+    redirect_uri_configured: bool
+    access_token_configured: bool
+    refresh_token_configured: bool
+    organization: Optional[LinkedInOrganization] = None
+    notes: List[str]
+
+
 class SourceItem(BaseModel):
     id: str
     name: str

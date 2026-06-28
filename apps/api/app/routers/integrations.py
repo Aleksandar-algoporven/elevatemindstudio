@@ -1,7 +1,8 @@
 from fastapi import APIRouter
 
-from app.models import BufferStatus, MetaStatus
+from app.models import BufferStatus, LinkedInStatus, MetaStatus
 from app.services.buffer_client import get_buffer_status
+from app.services.linkedin_client import get_linkedin_status
 from app.services.meta_client import get_meta_status
 
 
@@ -16,3 +17,8 @@ def buffer_status() -> BufferStatus:
 @router.get("/meta/status", response_model=MetaStatus)
 def meta_status() -> MetaStatus:
     return get_meta_status()
+
+
+@router.get("/linkedin/status", response_model=LinkedInStatus)
+def linkedin_status() -> LinkedInStatus:
+    return get_linkedin_status()

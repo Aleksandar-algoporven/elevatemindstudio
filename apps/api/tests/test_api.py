@@ -2,6 +2,7 @@ from fastapi.testclient import TestClient
 
 from app.main import app
 from app.services.buffer_client import BufferClient
+from app.services.linkedin_client import LinkedInClient
 from app.services.meta_client import MetaClient
 
 
@@ -67,6 +68,24 @@ def test_meta_client_without_token() -> None:
     assert status.configured is False
     assert status.connected is False
     assert status.system_user_token_configured is False
+
+
+def test_linkedin_status_route() -> None:
+    response = client.get("/integrations/linkedin/status")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert "configured" in payload
+    assert "api_version" in payload
+    assert isinstance(payload["notes"], list)
+
+
+def test_linkedin_client_without_token() -> None:
+    status = LinkedInClient(api_version="202606").status()
+
+    assert status.configured is False
+    assert status.connected is False
+    assert status.access_token_configured is False
 
 
 def test_generate_draft_without_key() -> None:

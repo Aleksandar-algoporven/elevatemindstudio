@@ -19,6 +19,13 @@ class Settings:
     meta_page_id: str = os.getenv("META_PAGE_ID", "")
     meta_ig_business_account_id: str = os.getenv("META_IG_BUSINESS_ACCOUNT_ID", "")
     meta_webhook_verify_token: str = os.getenv("META_WEBHOOK_VERIFY_TOKEN", "")
+    linkedin_api_version: str = os.getenv("LINKEDIN_API_VERSION", "202606")
+    linkedin_client_id: str = os.getenv("LINKEDIN_CLIENT_ID", "")
+    linkedin_client_secret: str = os.getenv("LINKEDIN_CLIENT_SECRET", "")
+    linkedin_org_id: str = os.getenv("LINKEDIN_ORG_ID", "")
+    linkedin_redirect_uri: str = os.getenv("LINKEDIN_REDIRECT_URI", "")
+    linkedin_access_token: str = os.getenv("LINKEDIN_ACCESS_TOKEN", "")
+    linkedin_refresh_token: str = os.getenv("LINKEDIN_REFRESH_TOKEN", "")
 
 
 settings = Settings()
