@@ -51,7 +51,7 @@ node loopia-landing/scripts/deploy.mjs
 
 Use Loopia FTP/web-hosting credentials here. Loopia DNS/API credentials are used for DNS automation, not necessarily for file upload.
 
-Current note: the known Loopia API/DNS credential returned `530 Login authentication failed` when used for FTP. The new static root landing is prepared in `loopia-landing/dist`, but the public root domain needs either a valid FTP upload or manual Loopia panel upload.
+Current note: Loopia static upload uses `FTP_HOST`, `FTP_USER`, and `FTP_PASS` from the local secret file. The DNS/API credentials are separate and should not be assumed to work for file upload.
 
 Railway CLI currently needs a fresh valid token before env changes can be automated.
 
