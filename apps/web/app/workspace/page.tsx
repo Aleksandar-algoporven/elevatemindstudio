@@ -163,6 +163,34 @@ export default async function WorkspacePage() {
   const reviewDrafts = drafts || [];
   const sourceItems = sources || [];
   const readyChannels = buffer?.channels.filter((channel) => channel.products.includes("publish")) || [];
+  const approvedDrafts = reviewDrafts.filter((draft) => draft.approval_state === "approved");
+  const reviewBlockedDrafts = reviewDrafts.filter((draft) => draft.approval_state !== "approved");
+  const publishGates = [
+    {
+      label: "Review gate",
+      value: `${reviewBlockedDrafts.length} open`,
+      state: reviewBlockedDrafts.length ? "partial" : "connected",
+      detail: "Every draft needs explicit approval before queueing."
+    },
+    {
+      label: "Approved queue",
+      value: `${approvedDrafts.length} ready`,
+      state: approvedDrafts.length ? "connected" : "partial",
+      detail: "Approved drafts can be validated against Buffer."
+    },
+    {
+      label: "Buffer dry-run",
+      value: publishPlan?.accepted ? "Ready" : "Blocked",
+      state: publishPlan?.accepted ? "connected" : "blocked",
+      detail: publishPlan?.notes?.[0] || "Dry-run status unavailable."
+    },
+    {
+      label: "Real publish",
+      value: "Locked",
+      state: "blocked",
+      detail: "Real Buffer publishing remains disabled until the workflow is accepted."
+    }
+  ];
 
   return (
     <main className="workspaceShell">
@@ -295,10 +323,32 @@ export default async function WorkspacePage() {
                 <article key={source.id}>
                   <strong>{source.name}</strong>
                   <span>{source.source_type}</span>
-                  <span>{source.status} · {source.item_count} items</span>
+                  <span>{source.status} - {source.item_count} items</span>
                 </article>
               ))}
             </div>
+          </div>
+        </section>
+
+        <section className="workspacePanel">
+          <div className="workspacePanelHeader">
+            <div>
+              <p className="eyebrow">Publish gates</p>
+              <h2>Approval to Buffer path</h2>
+            </div>
+            <span className="smallBadge">No auto-posting</span>
+          </div>
+          <div className="gateGrid">
+            {publishGates.map((gate) => (
+              <article className="gateCard" key={gate.label}>
+                <div>
+                  <span>{gate.label}</span>
+                  <strong>{gate.value}</strong>
+                </div>
+                <p>{gate.detail}</p>
+                <span className={`statusChip connector-${gate.state}`}>{gate.state}</span>
+              </article>
+            ))}
           </div>
         </section>
 

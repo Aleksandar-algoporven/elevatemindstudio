@@ -1,8 +1,8 @@
 from fastapi.testclient import TestClient
-from app.routers import integrations
+from app.routers import approvals, integrations
 
 from app.main import app
-from app.models import BufferChannel, BufferPublishRequest, BufferStatus
+from app.models import BufferChannel, BufferPublishRequest, BufferPublishResult, BufferPublishTarget, BufferStatus
 from app.services.buffer_client import BufferClient
 from app.services.discord_client import DiscordClient
 from app.services.linkedin_client import LinkedInClient
@@ -311,3 +311,48 @@ def test_approval_updates_draft_state() -> None:
     drafts = client.get("/drafts").json()
     updated = next(draft for draft in drafts if draft["id"] == "draft-002")
     assert updated["approval_state"] == "approved"
+
+
+def test_publish_plan_blocks_unapproved_draft() -> None:
+    response = client.post("/approvals/drafts/draft-001/publish-plan")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["approved"] is False
+    assert payload["gate_state"] == "blocked"
+    assert "Approval is required" in payload["blockers"][0]
+
+
+def test_publish_plan_uses_buffer_for_approved_draft(monkeypatch) -> None:
+    client.post(
+        "/approvals/drafts/draft-002",
+        json={"decision": "approve", "reviewer": "Aleksandar", "notes": "Ready for dry-run."},
+    )
+
+    def fake_publish(request: BufferPublishRequest) -> BufferPublishResult:
+        assert request.channel == "x"
+        assert request.dry_run is True
+        return BufferPublishResult(
+            accepted=True,
+            dry_run=True,
+            channel=request.channel,
+            target=BufferPublishTarget(
+                channel_id="channel-x",
+                service="twitter",
+                name="AlgoProven",
+                display_name="AlgoProven",
+            ),
+            scheduled_at=request.scheduled_at,
+            text_length=len(request.text),
+            notes=["Dry run only. No content was sent to Buffer."],
+        )
+
+    monkeypatch.setattr(approvals, "publish_to_buffer", fake_publish)
+    response = client.post("/approvals/drafts/draft-002/publish-plan")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["approved"] is True
+    assert payload["gate_state"] == "ready"
+    assert payload["buffer"]["accepted"] is True
+    assert payload["buffer"]["target"]["service"] == "twitter"

@@ -11,6 +11,7 @@ SourceStatus = Literal["ready", "syncing", "manual", "pending"]
 SourceType = Literal["website", "blog", "repo", "document", "feed", "manual"]
 ApprovalDecision = Literal["approve", "reject", "request_changes"]
 InboxPriority = Literal["low", "normal", "high", "urgent"]
+PublishGateState = Literal["ready", "blocked", "waiting_connector"]
 
 
 class Brand(BaseModel):
@@ -90,6 +91,15 @@ class BufferPublishResult(BaseModel):
     scheduled_at: Optional[str] = None
     text_length: int
     notes: List[str]
+
+
+class DraftPublishPlan(BaseModel):
+    draft_id: str
+    channel: Channel
+    approved: bool
+    gate_state: PublishGateState
+    blockers: List[str]
+    buffer: Optional[BufferPublishResult] = None
 
 
 class MetaAsset(BaseModel):

@@ -307,6 +307,368 @@ a {
   color: var(--muted);
 }
 
+.landingShell {
+  min-height: 100vh;
+  overflow: hidden;
+  background: #f7f4ed;
+  color: #161a1a;
+}
+
+.landingContainer {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+.landingNav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  min-height: 76px;
+  padding: 0;
+  border-bottom: 1px solid rgba(31, 36, 35, 0.09);
+}
+
+.landingNav nav {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  color: #45504d;
+  font-size: 14px;
+  font-weight: 760;
+}
+
+.landingNav nav a:hover {
+  color: #161a1a;
+}
+
+.landingHero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(420px, 1.08fr);
+  gap: 46px;
+  align-items: center;
+  min-height: calc(100vh - 76px);
+  padding: 54px 0 78px;
+}
+
+.landingHero::before {
+  content: "";
+  position: absolute;
+  inset: 24px -120px auto auto;
+  width: 58%;
+  height: 66%;
+  border: 1px solid rgba(31, 36, 35, 0.08);
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.25) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(255, 255, 255, 0.25) 1px, transparent 1px);
+  background-size: 46px 46px;
+  opacity: 0.7;
+  transform: rotate(-3deg);
+  pointer-events: none;
+}
+
+.landingCopy,
+.landingBoard {
+  position: relative;
+  z-index: 1;
+}
+
+.landingCopy h1,
+.landingBand h2 {
+  margin: 0;
+  letter-spacing: 0;
+}
+
+.landingCopy h1 {
+  max-width: 820px;
+  margin-bottom: 22px;
+  font-size: 84px;
+  line-height: 0.95;
+}
+
+.landingCopy > p:not(.eyebrow):not(.landingNote) {
+  max-width: 650px;
+  color: #45504d;
+  font-size: 21px;
+  line-height: 1.62;
+}
+
+.landingNote {
+  margin: 0;
+  color: #6f7a76;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.landingBoard {
+  border: 1px solid rgba(31, 36, 35, 0.14);
+  border-radius: 8px;
+  background: #fbfaf5;
+  box-shadow: 0 24px 70px rgba(31, 36, 35, 0.14);
+  overflow: hidden;
+}
+
+.landingBoardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  min-height: 54px;
+  padding: 0 18px;
+  border-bottom: 1px solid #ded7c9;
+  background: #1f2423;
+  color: #fffaf0;
+  font-size: 14px;
+  font-weight: 820;
+}
+
+.landingBoardTop strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #b8f7d3;
+  font-size: 13px;
+}
+
+.landingBoardTop strong::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #52d47f;
+}
+
+.landingBoardBody {
+  display: grid;
+  grid-template-columns: 0.84fr 1.16fr;
+  min-height: 470px;
+}
+
+.landingChannelRail {
+  padding: 16px;
+  border-right: 1px solid #ded7c9;
+  background: #f4f0e7;
+}
+
+.miniLabel,
+.draftHead span:first-child {
+  color: #6f7a76;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.landingChannelList {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.landingChannel {
+  display: grid;
+  gap: 6px;
+  padding: 13px;
+  border: 1px solid rgba(31, 36, 35, 0.1);
+  border-radius: 8px;
+  background: rgba(255, 253, 248, 0.8);
+}
+
+.landingChannel strong {
+  font-size: 14px;
+}
+
+.bar {
+  height: 8px;
+  border-radius: 999px;
+  background: #e7dfce;
+  overflow: hidden;
+}
+
+.bar span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+}
+
+.mossBar {
+  width: 82%;
+  background: #526c4d;
+}
+
+.skyBar {
+  width: 64%;
+  background: #477ca4;
+}
+
+.clayBar {
+  width: 46%;
+  background: #bd5744;
+}
+
+.landingWork {
+  padding: 18px;
+  background: #fbfaf5;
+}
+
+.landingPipeline {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin: 15px 0 18px;
+}
+
+.landingStage {
+  min-height: 105px;
+  padding: 12px;
+  border: 1px solid #ded7c9;
+  border-radius: 8px;
+  background: #fffdf8;
+}
+
+.landingStage b {
+  display: block;
+  margin-bottom: 12px;
+  color: #161a1a;
+  font-size: 13px;
+}
+
+.landingStage span {
+  display: block;
+  width: 100%;
+  height: 9px;
+  margin-top: 8px;
+  border-radius: 999px;
+  background: #e8dfcc;
+}
+
+.landingDraftCard {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid rgba(82, 108, 77, 0.24);
+  border-radius: 8px;
+  background: #fffdf8;
+}
+
+.draftHead,
+.reviewRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.landingDraftCard h3 {
+  margin: 0;
+  font-size: 24px;
+  line-height: 1.18;
+}
+
+.landingDraftCard p {
+  margin: 0;
+  color: #45504d;
+  line-height: 1.55;
+}
+
+.reviewRow {
+  padding-top: 12px;
+  border-top: 1px solid #ded7c9;
+}
+
+.reviewRow > span:first-child {
+  color: #6f7a76;
+  font-size: 13px;
+}
+
+.landingBand {
+  padding: 86px 0;
+  border-top: 1px solid rgba(31, 36, 35, 0.1);
+}
+
+.landingBand h2 {
+  max-width: 760px;
+  margin-bottom: 18px;
+  font-size: 56px;
+  line-height: 1.03;
+}
+
+.bandLead {
+  max-width: 740px;
+  color: #45504d;
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+.landingCardGrid,
+.identityGrid {
+  display: grid;
+  gap: 14px;
+  margin-top: 28px;
+}
+
+.landingCardGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.identityGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.landingCard {
+  min-height: 220px;
+  padding: 24px;
+  border: 1px solid #ded7c9;
+  border-radius: 8px;
+  background: rgba(255, 253, 248, 0.76);
+}
+
+.landingCard h3 {
+  margin: 0 0 12px;
+  font-size: 22px;
+}
+
+.landingCard p {
+  margin: 0;
+  color: #45504d;
+  line-height: 1.66;
+}
+
+.cardNumber {
+  display: inline-flex;
+  margin-bottom: 30px;
+  color: #a78234;
+  font-size: 13px;
+  font-weight: 950;
+}
+
+.darkBand {
+  background: #1f2423;
+  color: #fffaf0;
+}
+
+.darkBand .eyebrow,
+.darkBand .bandLead,
+.darkBand .landingCard p {
+  color: #d7d0c0;
+}
+
+.darkBand .landingCard {
+  border-color: rgba(255, 250, 240, 0.13);
+  background: rgba(255, 250, 240, 0.05);
+}
+
+.invertedLink {
+  background: #fffaf0;
+  color: #1f2423;
+}
+
+.mutedLink {
+  background: rgba(255, 250, 240, 0.78);
+  color: #1f2423;
+}
+
 .legalShell {
   background: #ffffff;
 }
@@ -624,6 +986,46 @@ a {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
+}
+
+.gateGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.gateCard {
+  display: grid;
+  align-content: space-between;
+  gap: 14px;
+  min-height: 176px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcfb;
+}
+
+.gateCard div {
+  display: grid;
+  gap: 10px;
+}
+
+.gateCard span:not(.statusChip) {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.gateCard strong {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.gateCard p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
 }
 
 .appShell {
@@ -1021,7 +1423,8 @@ a {
 @media (max-width: 1050px) {
   .summaryGrid,
   .contentGrid,
-  .workspaceGrid {
+  .workspaceGrid,
+  .landingHero {
     grid-template-columns: 1fr;
   }
 
@@ -1031,8 +1434,32 @@ a {
 
   .opsGrid,
   .publishPreview,
-  .channelStrip {
+  .channelStrip,
+  .gateGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .landingHero {
+    min-height: auto;
+  }
+
+  .landingHero::before {
+    width: 100%;
+    inset: 30px -40px auto auto;
+  }
+
+  .landingBoardBody {
+    grid-template-columns: 1fr;
+  }
+
+  .landingChannelRail {
+    border-right: 0;
+    border-bottom: 1px solid #ded7c9;
+  }
+
+  .landingCardGrid,
+  .identityGrid {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -1049,6 +1476,47 @@ a {
   .publicBand {
     grid-template-columns: 1fr;
     padding: 34px 18px;
+  }
+
+  .landingContainer {
+    width: min(100% - 28px, 1180px);
+  }
+
+  .landingNav {
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    padding: 18px 0;
+  }
+
+  .landingNav nav {
+    gap: 12px;
+    font-size: 13px;
+  }
+
+  .landingHero {
+    padding-top: 42px;
+  }
+
+  .landingCopy h1 {
+    font-size: 42px;
+  }
+
+  .landingCopy > p:not(.eyebrow):not(.landingNote),
+  .bandLead {
+    font-size: 17px;
+  }
+
+  .landingPipeline {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .landingBand {
+    padding: 58px 0;
+  }
+
+  .landingBand h2 {
+    font-size: 34px;
   }
 
   .publicHero {
@@ -1111,7 +1579,8 @@ a {
   .opsGrid,
   .publishPreview,
   .sourceMatrix,
-  .channelStrip {
+  .channelStrip,
+  .gateGrid {
     grid-template-columns: 1fr;
   }
 
