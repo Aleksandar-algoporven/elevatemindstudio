@@ -159,6 +159,8 @@ Core deployment je aktivan:
 - Railway API: `https://api.elevatemindstudio.net`
 - Vercel app alias: `https://elevatemindstudio-web.vercel.app`
 
+Napomena: novi static landing je pripremljen u `loopia-landing/dist`, ali root Loopia upload trazi pravi FTP/web-hosting login. Loopia API/DNS credential nije prihvacen za FTP upload.
+
 Brand/logo:
 
 - Final logo pack je u `apps/web/public/brand/elevatemind-final`.
@@ -188,8 +190,9 @@ docs/OWNER_TODO.md
 
 Trenutno su najvaznije stvari:
 
-1. Novi validan `RAILWAY_TOKEN`.
-2. LinkedIn Community Management API approval.
-3. Discord verification + `DISCORD_GUILD_ID` + `DISCORD_ALERTS_CHANNEL_ID`.
-4. Google/YouTube verification samo ako Google ponovo trazi.
-5. Meta ostaje pauzirana.
+1. Loopia FTP/web-hosting login ili manual upload za root landing.
+2. Novi validan `RAILWAY_TOKEN`.
+3. LinkedIn Community Management API approval.
+4. Discord verification + `DISCORD_GUILD_ID` + `DISCORD_ALERTS_CHANNEL_ID`.
+5. Google/YouTube verification samo ako Google ponovo trazi.
+6. Meta ostaje pauzirana.

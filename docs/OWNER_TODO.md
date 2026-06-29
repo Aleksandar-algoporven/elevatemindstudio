@@ -2,7 +2,17 @@
 
 Only the external account items below need your action.
 
-## 1. Railway Token
+## 1. Loopia Static Upload
+
+1. Open Loopia control panel.
+2. Find or create the FTP/web-hosting login for `elevatemindstudio.net`.
+3. Either upload `loopia-landing/dist` to `public_html` in the panel, or put the FTP username/password into the secret file as temporary local values.
+4. Do not send the password in chat.
+5. Tell Codex: `Loopia FTP je dodat` or `Loopia landing je uploadovan`.
+
+Why: the Loopia DNS/API credential is not accepted by FTP, so the root domain still needs the new static landing upload.
+
+## 2. Railway Token
 
 1. Open Railway account settings.
 2. Create a new account token.
@@ -12,7 +22,7 @@ Only the external account items below need your action.
 
 Why: the current token is not accepted by Railway CLI, so env updates cannot be automated.
 
-## 2. LinkedIn Approval
+## 3. LinkedIn Approval
 
 1. Wait for LinkedIn Community Management API approval.
 2. When approved, open the LinkedIn developer app.
@@ -23,7 +33,7 @@ Why: the current token is not accepted by Railway CLI, so env updates cannot be 
 
 Why: without organization scopes, backend will continue to reject company/page publishing.
 
-## 3. Discord Verification
+## 4. Discord Verification
 
 1. Finish Discord developer verification/document request.
 2. Open the target Discord server for ElevateMindStudio operations.
@@ -34,7 +44,7 @@ Why: without organization scopes, backend will continue to reject company/page p
 
 Why: bot token is not enough; the backend also needs the server and alert channel.
 
-## 4. Google / YouTube
+## 5. Google / YouTube
 
 1. Keep the Google OAuth app in External/Test mode until verification is required.
 2. Keep the AlgoProven YouTube account as a test user.
@@ -44,7 +54,7 @@ Why: bot token is not enough; the backend also needs the server and alert channe
    - Terms: `https://elevatemindstudio.net/terms/`
 4. Tell Codex if Google requests a new verification step.
 
-## 5. Meta
+## 6. Meta
 
 1. Do nothing for now.
 2. Keep Meta/Facebook/Instagram paused until LinkedIn, Discord, and the workspace workflow are stable.
