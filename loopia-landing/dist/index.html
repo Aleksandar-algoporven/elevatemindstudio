@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ElevateMindStudio - Social media operating system</title>
     <meta name="description" content="ElevateMindStudio is a private social media operations platform for planning, reviewing, approving, and publishing brand content.">
-    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/assets/elevatemind-icon-100x100-transparent.png" type="image/png">
     <link rel="stylesheet" href="/assets/site.css">
   </head>
   <body>
     <main class="shell">
       <header class="container nav">
         <a class="brand" href="/" aria-label="ElevateMindStudio home">
-          <span class="mark">EM</span>
+          <img class="brand-icon" src="/assets/elevatemind-icon-100x100-transparent.png" alt="" width="36" height="36">
           <span>ElevateMindStudio</span>
         </a>
         <nav class="nav-links" aria-label="Primary navigation">
@@ -25,79 +25,87 @@
       </header>
 
       <section class="container hero">
+        <div class="hero-scene" aria-hidden="true">
+          <div class="scene-topline">
+            <span>AlgoProven campaign room</span>
+            <strong>Live MVP</strong>
+          </div>
+          <div class="scene-grid">
+            <div class="scene-panel source-panel">
+              <span class="mini-label">Brand memory</span>
+              <strong>Source-backed drafts</strong>
+              <div class="scene-lines"><span></span><span></span><span></span></div>
+            </div>
+            <div class="scene-panel review-panel">
+              <span class="mini-label">Approval lane</span>
+              <strong>Review before reach</strong>
+              <div class="scene-approval"><span>Draft</span><span>Approve</span><span>Queue</span></div>
+            </div>
+            <div class="scene-panel channel-panel">
+              <span class="mini-label">Connectors</span>
+              <div class="scene-connectors">
+                <span class="scene-connector green"><b>Buffer</b><small>Live</small></span>
+                <span class="scene-connector blue"><b>YouTube</b><small>OAuth ready</small></span>
+                <span class="scene-connector gold"><b>LinkedIn</b><small>Review pending</small></span>
+                <span class="scene-connector red"><b>Discord</b><small>Verify pending</small></span>
+              </div>
+            </div>
+            <div class="scene-panel publish-panel">
+              <span class="mini-label">Publish gates</span>
+              <strong>No auto-posting</strong>
+              <div class="gate-rail"><span></span><span></span><span></span></div>
+            </div>
+          </div>
+        </div>
         <div class="copy">
+          <img class="hero-logo" src="/assets/elevatemind-logo-horizontal-transparent.png" alt="ElevateMindStudio" width="1123" height="310">
           <p class="eyebrow">Social media operating system</p>
-          <h1>Build, review, and publish brand content without losing the thread.</h1>
+          <h1>ElevateMind<wbr>Studio</h1>
           <p class="lead">
-            ElevateMindStudio turns trusted brand sources into channel-ready drafts,
-            approval queues, and controlled publishing workflows for owned brands and
-            managed campaigns. The first live campaign is AlgoProven.
+            A control room for brand memory, AI-assisted drafts, human approval,
+            and connector-safe publishing. The platform is ElevateMindStudio; the
+            first live campaign is AlgoProven.
           </p>
           <div class="actions">
             <a class="button primary" href="https://app.elevatemindstudio.net/workspace">Open workspace</a>
             <a class="button secondary" href="#workflow">View workflow</a>
           </div>
-          <p class="note">Private beta. Integrations are connected only with authorized brand accounts.</p>
+          <div class="hero-signals">
+            <span>API live</span>
+            <span>Buffer dry-run</span>
+            <span>Legal pages ready</span>
+          </div>
         </div>
+      </section>
 
-        <div class="hero-board" aria-label="Product preview">
-          <div class="board-top">
-            <span>AlgoProven campaign room</span>
-            <span class="status">Buffer connected</span>
-          </div>
-          <div class="board-body">
-            <aside class="rail">
-              <div class="rail-title">Channels</div>
-              <div class="channel-list">
-                <div class="channel">
-                  <strong>X / Twitter</strong>
-                  <span class="bar"><span class="moss"></span></span>
-                </div>
-                <div class="channel">
-                  <strong>YouTube</strong>
-                  <span class="bar"><span class="sky"></span></span>
-                </div>
-                <div class="channel">
-                  <strong>Instagram</strong>
-                  <span class="bar"><span class="clay"></span></span>
-                </div>
-              </div>
-            </aside>
-            <section class="work">
-              <span class="mini-label">Publishing pipeline</span>
-              <div class="campaign">
-                <div class="stage"><b>Sources</b><span></span><span></span></div>
-                <div class="stage"><b>Drafts</b><span></span><span></span></div>
-                <div class="stage"><b>Approval</b><span></span><span></span></div>
-                <div class="stage"><b>Queue</b><span></span><span></span></div>
-              </div>
-              <article class="draft-card">
-                <div class="draft-head">
-                  <span>Draft review</span>
-                  <span class="pill gold">Needs approval</span>
-                </div>
-                <h3>One idea, adapted for each channel.</h3>
-                <p>
-                  The workspace keeps source context, brand voice, approval status,
-                  and publish target visible before anything leaves the system.
-                </p>
-                <div class="review-row">
-                  <span class="note">Dry-run publish validation is live.</span>
-                  <span class="pill green">Safe to test</span>
-                </div>
-              </article>
-            </section>
-          </div>
+      <section class="signal-band" aria-label="Operating signals">
+        <div class="container signal-grid">
+          <article class="signal-card">
+            <span>Sources</span>
+            <strong>Approved</strong>
+            <p>Campaign notes, links, and positioning stay attached to every draft.</p>
+          </article>
+          <article class="signal-card">
+            <span>Review</span>
+            <strong>Human gate</strong>
+            <p>Every publish route is visible before content reaches a channel.</p>
+          </article>
+          <article class="signal-card">
+            <span>Bridge</span>
+            <strong>Dry-run live</strong>
+            <p>Buffer is validating the path while direct APIs finish approvals.</p>
+          </article>
         </div>
       </section>
 
       <section id="platform" class="band">
         <div class="container">
           <p class="eyebrow">Platform</p>
-          <h2>A control room for social media operations.</h2>
+          <h2>One operating layer between ideas, approvals, and publishing.</h2>
           <p class="band-lead">
-            ElevateMindStudio is not a posting toy. It is the operating layer between
-            brand knowledge, AI-assisted drafting, human review, and publishing systems.
+            The system is built around source-of-truth content, review state,
+            connector readiness, and a clear separation between the platform and
+            every managed brand campaign.
           </p>
           <div class="grid three">
             <article class="card">
@@ -124,9 +132,9 @@
           <p class="eyebrow">Workflow</p>
           <h2>Designed around review before reach.</h2>
           <p class="band-lead">
-            The current MVP connects the workspace to Buffer dry-run validation,
-            YouTube status, legal pages, and a production API. LinkedIn and Discord
-            stay staged until their verifications are approved.
+            The current MVP connects the workspace to a production API, Buffer
+            dry-run validation, YouTube status, legal pages, and explicit publish
+            gates. LinkedIn and Discord remain staged until their verifications are approved.
           </p>
           <div class="grid four">
             <div class="grid three">

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 const platformCards = [
@@ -36,12 +37,44 @@ const workflowCards = [
   }
 ];
 
+const signalCards = [
+  {
+    label: "Sources",
+    value: "Approved",
+    detail: "Campaign notes, links, and positioning stay attached to every draft."
+  },
+  {
+    label: "Review",
+    value: "Human gate",
+    detail: "Every publish route is visible before content reaches a channel."
+  },
+  {
+    label: "Bridge",
+    value: "Dry-run live",
+    detail: "Buffer is validating the path while direct APIs finish approvals."
+  }
+];
+
+const connectorCards = [
+  { name: "Buffer", state: "Live", tone: "green" },
+  { name: "YouTube", state: "OAuth ready", tone: "blue" },
+  { name: "LinkedIn", state: "Review pending", tone: "gold" },
+  { name: "Discord", state: "Verify pending", tone: "red" }
+];
+
 export default function Home() {
   return (
     <main className="landingShell">
       <header className="landingNav landingContainer">
         <Link className="siteBrand" href="/" aria-label="ElevateMindStudio home">
-          <span className="siteBrandMark" aria-hidden="true">EM</span>
+          <Image
+            className="siteBrandLogo"
+            src="/brand/elevatemind-final/elevatemind-icon-100x100-transparent.png"
+            alt=""
+            width={36}
+            height={36}
+            priority
+          />
           <span>ElevateMindStudio</span>
         </Link>
         <nav aria-label="Primary navigation">
@@ -54,83 +87,101 @@ export default function Home() {
       </header>
 
       <section className="landingHero landingContainer" aria-labelledby="hero-title">
+        <div className="heroScene" aria-hidden="true">
+          <div className="sceneTopline">
+            <span>AlgoProven campaign room</span>
+            <strong>Live MVP</strong>
+          </div>
+          <div className="sceneGrid">
+            <div className="scenePanel sourcePanel">
+              <span className="miniLabel">Brand memory</span>
+              <strong>Source-backed drafts</strong>
+              <div className="sceneLines">
+                <span />
+                <span />
+                <span />
+              </div>
+            </div>
+            <div className="scenePanel reviewPanel">
+              <span className="miniLabel">Approval lane</span>
+              <strong>Review before reach</strong>
+              <div className="sceneApproval">
+                <span>Draft</span>
+                <span>Approve</span>
+                <span>Queue</span>
+              </div>
+            </div>
+            <div className="scenePanel channelPanel">
+              <span className="miniLabel">Connectors</span>
+              <div className="sceneConnectors">
+                {connectorCards.map((connector) => (
+                  <span className={`sceneConnector ${connector.tone}`} key={connector.name}>
+                    <b>{connector.name}</b>
+                    <small>{connector.state}</small>
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className="scenePanel publishPanel">
+              <span className="miniLabel">Publish gates</span>
+              <strong>No auto-posting</strong>
+              <div className="gateRail">
+                <span />
+                <span />
+                <span />
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="landingCopy">
+          <Image
+            className="heroLogo"
+            src="/brand/elevatemind-final/elevatemind-logo-horizontal-transparent.png"
+            alt="ElevateMindStudio"
+            width={1123}
+            height={310}
+            priority
+          />
           <p className="eyebrow">Social media operating system</p>
-          <h1 id="hero-title">Build, review, and publish brand content without losing the thread.</h1>
+          <h1 id="hero-title">ElevateMind<wbr />Studio</h1>
           <p>
-            ElevateMindStudio turns trusted brand sources into channel-ready drafts,
-            approval queues, and controlled publishing workflows for owned brands and
-            managed campaigns. The first live campaign is AlgoProven.
+            A control room for brand memory, AI-assisted drafts, human approval,
+            and connector-safe publishing. The platform is ElevateMindStudio; the
+            first live campaign is AlgoProven.
           </p>
           <div className="heroActions" aria-label="Primary links">
             <Link className="primaryLink" href="/workspace">Open workspace</Link>
             <a className="secondaryLink" href="#workflow">View workflow</a>
           </div>
-          <p className="landingNote">Private beta. Integrations are connected only with authorized brand accounts.</p>
+          <div className="heroSignalRow" aria-label="Production status">
+            <span>API live</span>
+            <span>Buffer dry-run</span>
+            <span>Legal pages ready</span>
+          </div>
         </div>
+      </section>
 
-        <div className="landingBoard" aria-label="Product preview">
-          <div className="landingBoardTop">
-            <span>AlgoProven campaign room</span>
-            <strong>Buffer connected</strong>
-          </div>
-          <div className="landingBoardBody">
-            <aside className="landingChannelRail">
-              <span className="miniLabel">Channels</span>
-              <div className="landingChannelList">
-                <div className="landingChannel">
-                  <strong>X / Twitter</strong>
-                  <span className="bar"><span className="mossBar" /></span>
-                </div>
-                <div className="landingChannel">
-                  <strong>YouTube</strong>
-                  <span className="bar"><span className="skyBar" /></span>
-                </div>
-                <div className="landingChannel">
-                  <strong>Instagram</strong>
-                  <span className="bar"><span className="clayBar" /></span>
-                </div>
-              </div>
-            </aside>
-
-            <section className="landingWork">
-              <span className="miniLabel">Publishing pipeline</span>
-              <div className="landingPipeline">
-                {["Sources", "Drafts", "Approval", "Queue"].map((stage) => (
-                  <div className="landingStage" key={stage}>
-                    <b>{stage}</b>
-                    <span />
-                    <span />
-                  </div>
-                ))}
-              </div>
-              <article className="landingDraftCard">
-                <div className="draftHead">
-                  <span>Draft review</span>
-                  <span className="statusChip status-needs-review">Needs approval</span>
-                </div>
-                <h3>One idea, adapted for each channel.</h3>
-                <p>
-                  The workspace keeps source context, brand voice, approval status,
-                  and publish target visible before anything leaves the system.
-                </p>
-                <div className="reviewRow">
-                  <span>Dry-run publish validation is live.</span>
-                  <span className="statusChip connector-connected">Safe to test</span>
-                </div>
-              </article>
-            </section>
-          </div>
+      <section className="signalBand" aria-label="Operating signals">
+        <div className="landingContainer signalGrid">
+          {signalCards.map((signal) => (
+            <article className="signalCard" key={signal.label}>
+              <span>{signal.label}</span>
+              <strong>{signal.value}</strong>
+              <p>{signal.detail}</p>
+            </article>
+          ))}
         </div>
       </section>
 
       <section id="platform" className="landingBand">
         <div className="landingContainer">
           <p className="eyebrow">Platform</p>
-          <h2>A control room for social media operations.</h2>
+          <h2>One operating layer between ideas, approvals, and publishing.</h2>
           <p className="bandLead">
-            ElevateMindStudio is not a posting toy. It is the operating layer between
-            brand knowledge, AI-assisted drafting, human review, and publishing systems.
+            The system is built around source-of-truth content, review state,
+            connector readiness, and a clear separation between the platform and
+            every managed brand campaign.
           </p>
           <div className="landingCardGrid">
             {platformCards.map((card) => (
@@ -149,9 +200,9 @@ export default function Home() {
           <p className="eyebrow">Workflow</p>
           <h2>Designed around review before reach.</h2>
           <p className="bandLead">
-            The current MVP connects the workspace to Buffer dry-run validation,
-            YouTube status, legal pages, and a production API. LinkedIn and Discord
-            stay staged until their verifications are approved.
+            The current MVP connects the workspace to a production API, Buffer
+            dry-run validation, YouTube status, legal pages, and explicit publish
+            gates. LinkedIn and Discord remain staged until their verifications are approved.
           </p>
           <div className="landingCardGrid">
             {workflowCards.map((card) => (
@@ -181,7 +232,7 @@ export default function Home() {
           <div className="identityGrid">
             <div className="landingCard identityCard">
               <h3>Platform identity</h3>
-              <p>ElevateMindStudio owns the product, API, workspace, legal pages, and integration layer.</p>
+              <p>ElevateMindStudio owns the product, API, workspace, legal pages, connectors, and approval model.</p>
             </div>
             <div className="landingCard identityCard">
               <h3>Campaign identity</h3>

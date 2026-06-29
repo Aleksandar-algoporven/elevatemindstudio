@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export const dynamic = "force-dynamic";
 
@@ -196,7 +197,14 @@ export default async function WorkspacePage() {
     <main className="workspaceShell">
       <aside className="workspaceRail">
         <Link className="siteBrand workspaceBrand" href="/">
-          <span className="siteBrandMark" aria-hidden="true">EM</span>
+          <Image
+            className="siteBrandLogo"
+            src="/brand/elevatemind-final/elevatemind-icon-100x100-transparent.png"
+            alt=""
+            width={36}
+            height={36}
+            priority
+          />
           <span>ElevateMindStudio</span>
         </Link>
         <nav aria-label="Workspace sections">

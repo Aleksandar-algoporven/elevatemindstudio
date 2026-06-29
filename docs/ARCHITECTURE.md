@@ -17,6 +17,16 @@ The first production workspace is AlgoProven. ElevateMindStudio is the platform/
 - `apps/worker`: scheduled/background jobs for inbox sync, publishing retries, analytics backfill, and source refresh.
 - `packages/shared`: shared frontend TypeScript types.
 
+## Production Infrastructure
+
+- Loopia hosts the public root landing and legal pages.
+- Railway hosts the API and current app workspace.
+- Vercel hosts a production web alias and can become the primary frontend host later.
+- GitHub `main` is the source branch for production deploys.
+- Secrets stay in `secrets/elevatemindstudio.local.env` locally and in platform env stores remotely.
+
+The production runbook is maintained in `docs/PRODUCTION_RUNBOOK.md`.
+
 ## Control Plane
 
 The MVP works as a review-first publishing system:
@@ -45,6 +55,18 @@ Current API surface includes:
 - Upstash Redis will handle rate limits, locks, and queue metadata.
 - Anthropic Claude is the AI provider inside the product, accessed only through `ANTHROPIC_API_KEY`.
 - Buffer is the first publishing bridge while direct connectors are validated.
+
+## Data Layer Roadmap
+
+The current MVP still uses in-repo/demo data for the first operator workspace. The next backend infrastructure milestone is:
+
+1. Supabase Postgres for brands, campaigns, sources, drafts, approvals, schedules, and audit logs.
+2. Supabase Auth for the small operator team.
+3. Supabase Storage or a later asset store for generated creative assets.
+4. Upstash Redis for rate limits, short job locks, retry metadata, and idempotency keys.
+5. Worker jobs for source refresh, inbox sync, analytics backfill, and publish retries.
+
+Do not enable autonomous real publishing until the durable audit trail exists.
 
 ## Connector State
 

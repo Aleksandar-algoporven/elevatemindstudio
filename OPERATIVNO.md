@@ -31,6 +31,9 @@ https://github.com/Aleksandar-algoporven/elevatemindstudio
 - `secrets/elevatemindstudio.local.env` - lokalni tajni fajl koji punis tokenima.
 - `docs/ARCHITECTURE.md` - tehnicka arhitektura.
 - `docs/DEVELOPMENT.md` - lokalni development i API surface.
+- `docs/BRAND_ASSETS.md` - finalni logo pack i pravila upotrebe.
+- `docs/PRODUCTION_RUNBOOK.md` - live surfaces, deploy komande i safety gate.
+- `docs/OWNER_TODO.md` - minimalni zadaci za Aleksandra, bez internog suma.
 - `infra/railway.md` - Railway deploy beleske.
 - `infra/vercel.md` - Vercel deploy beleske.
 
@@ -156,6 +159,12 @@ Core deployment je aktivan:
 - Railway API: `https://api.elevatemindstudio.net`
 - Vercel app alias: `https://elevatemindstudio-web.vercel.app`
 
+Brand/logo:
+
+- Final logo pack je u `apps/web/public/brand/elevatemind-final`.
+- Dokumentovana kopija je u `docs/brand/elevatemind-final`.
+- Pravila upotrebe su u `docs/BRAND_ASSETS.md`.
+
 Backend service:
 
 - Railway service: `elevatemindstudio`
@@ -168,3 +177,19 @@ Frontend service:
 - Root directory: repo root
 - Custom domain: `app.elevatemindstudio.net`
 - Vercel project: `elevatemindstudio-web`
+
+## 7. Minimalni sledeci koraci za Aleksandra
+
+Aktuelna kratka lista je u:
+
+```txt
+docs/OWNER_TODO.md
+```
+
+Trenutno su najvaznije stvari:
+
+1. Novi validan `RAILWAY_TOKEN`.
+2. LinkedIn Community Management API approval.
+3. Discord verification + `DISCORD_GUILD_ID` + `DISCORD_ALERTS_CHANNEL_ID`.
+4. Google/YouTube verification samo ako Google ponovo trazi.
+5. Meta ostaje pauzirana.

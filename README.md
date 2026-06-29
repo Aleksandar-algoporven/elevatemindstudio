@@ -11,6 +11,12 @@ AI-native social media operating system for brand memory, source ingestion, camp
 - `docs` - architecture and development notes
 - `infra` - deployment notes/config stubs
 
+Useful operating docs:
+
+- `docs/BRAND_ASSETS.md` - final ElevateMindStudio logo pack and usage rules
+- `docs/PRODUCTION_RUNBOOK.md` - production surfaces, deploy commands, DNS map, and connector state
+- `docs/OWNER_TODO.md` - minimal external account steps for the owner
+
 ## Local Development
 
 1. Install JavaScript dependencies:
@@ -62,6 +68,8 @@ Frontend `typecheck` and `lint` pass, API tests pass, and production `next build
 - Railway app: `https://app.elevatemindstudio.net`
 - Railway API: `https://api.elevatemindstudio.net`
 - Vercel web deployment: `https://elevatemindstudio-web.vercel.app`
+
+The active public design uses the final logo pack in `apps/web/public/brand/elevatemind-final`.
 
 ## Safety Rules
 
