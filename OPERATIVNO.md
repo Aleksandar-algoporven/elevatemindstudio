@@ -90,19 +90,20 @@ uvicorn app.main:app --host 0.0.0.0 --port $PORT
    - Napravi Redis bazu.
    - Meni vracas `UPSTASH_REDIS_REST_URL` i token ako nije kompletan.
 
-4. Railway web service, privremeno umesto Vercel
-   - Napravi drugi Railway service iz istog repo-a.
+4. Railway web service
+   - Frontend service je aktivan kao `splendid-clarity`.
    - Service root ostavi prazan / repo root.
    - Ne stavljaj `apps/web` kao root, jer build mora da vidi `packages/shared`.
    - Build command: `npm install && npm run build --workspace apps/web`
    - Start command: `npm run start --workspace apps/web -- --hostname 0.0.0.0 --port 3000`
-   - Koristimo ga za `app.elevatemindstudio.net` dok Vercel nalog/token ne bude aktivan.
-   - Meni vracas Railway generated frontend URL.
+   - Koristimo ga za `app.elevatemindstudio.net`.
 
-5. Vercel, kasnije
-   - Import repo za frontend kada token/account bude spreman.
-   - Frontend root ce biti `apps/web`.
-   - Ovo nije blokator za MVP dok Railway hostuje web.
+5. Vercel web deploy
+   - Project: `elevatemindstudio-web`
+   - Frontend root je `apps/web`.
+   - Production alias: `https://elevatemindstudio-web.vercel.app`
+   - Ako commit ne dira `apps/web`, koristi force deploy:
+     `npx vercel deploy --prod --yes --force --with-cache --logs`
 
 ### Zatim social bridge
 
@@ -146,30 +147,24 @@ Popunjeno je bez prikazivanja vrednosti:
 - `TELEGRAM_BOT_URL`
 - `TELEGRAM_BOT_TOKEN`
 
-## 6. Sledeci konkretan zadatak za tebe
+## 6. Deployment status
 
-Otvori Railway project i podesi backend service:
+Core deployment je aktivan:
 
-- Repository: `Aleksandar-algoporven/elevatemindstudio`
+- Loopia landing: `https://elevatemindstudio.net`
+- Railway app: `https://app.elevatemindstudio.net`
+- Railway API: `https://api.elevatemindstudio.net`
+- Vercel app alias: `https://elevatemindstudio-web.vercel.app`
+
+Backend service:
+
+- Railway service: `elevatemindstudio`
 - Root directory: `apps/api`
-- Env:
-  - `APP_NAME=ElevateMindStudio`
-  - `APP_ENV=production`
-  - `PRIMARY_DOMAIN=elevatemindstudio.net`
-  - `ANTHROPIC_API_KEY=<iz secret fajla>`
-  - `ANTHROPIC_MODEL=claude-sonnet-4-6`
-  - `CORS_ORIGIN=https://app.elevatemindstudio.net`
+- Custom domain: `api.elevatemindstudio.net`
 
-Kada Railway deploy prodje, meni posalji backend URL.
+Frontend service:
 
-Zatim napravi Railway web service:
-
-- Repository: `Aleksandar-algoporven/elevatemindstudio`
-- Root directory: ostavi prazno / repo root
-- Build command: `npm install && npm run build --workspace apps/web`
-- Start command: `npm run start --workspace apps/web -- --hostname 0.0.0.0 --port 3000`
-- Env:
-  - `NEXT_PUBLIC_APP_URL=https://app.elevatemindstudio.net`
-  - `NEXT_PUBLIC_API_BASE_URL=https://api.elevatemindstudio.net`
-
-Kada web deploy prodje, meni posalji frontend Railway URL.
+- Railway service: `splendid-clarity`
+- Root directory: repo root
+- Custom domain: `app.elevatemindstudio.net`
+- Vercel project: `elevatemindstudio-web`

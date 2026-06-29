@@ -56,7 +56,12 @@ Open `http://localhost:3000`.
 
 ## Current Development Note
 
-Frontend `typecheck` and `lint` pass, and API tests pass. Production `next build` currently needs the Next/React dependency line cleaned up after the blocked package update; use the dev server while this is being resolved.
+Frontend `typecheck` and `lint` pass, API tests pass, and production `next build` is green. The live production surfaces are:
+
+- Loopia static landing: `https://elevatemindstudio.net`
+- Railway app: `https://app.elevatemindstudio.net`
+- Railway API: `https://api.elevatemindstudio.net`
+- Vercel web deployment: `https://elevatemindstudio-web.vercel.app`
 
 ## Safety Rules
 

@@ -2,10 +2,12 @@
 
 Static public landing for `elevatemindstudio.net`.
 
-The dynamic workspace remains on Railway:
+The dynamic workspace remains on Railway, with Vercel also deployed as a web
+production alias:
 
 - `https://app.elevatemindstudio.net/workspace`
 - `https://api.elevatemindstudio.net`
+- `https://elevatemindstudio-web.vercel.app`
 
 Deploy:
 
