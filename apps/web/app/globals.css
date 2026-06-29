@@ -2072,3 +2072,83 @@ a {
     min-height: auto;
   }
 }
+
+/* Final landing layout guard: keep hero copy and product scene in separate flow columns. */
+.siteBrandWordmark {
+  display: block;
+  width: min(230px, 54vw);
+  height: auto;
+  object-fit: contain;
+}
+
+.landingHero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.86fr) minmax(480px, 1.14fr);
+  gap: 58px;
+  align-items: center;
+  min-height: calc(100vh - 78px);
+  padding: 64px 0 86px;
+}
+
+.landingCopy {
+  position: relative;
+  z-index: 1;
+  max-width: 600px;
+  padding-top: 0;
+}
+
+.landingCopy h1 {
+  max-width: 600px;
+  font-size: clamp(52px, 5vw, 76px);
+  line-height: 0.98;
+}
+
+.landingCopy > p:not(.eyebrow):not(.landingNote) {
+  max-width: 590px;
+}
+
+.heroLogo {
+  display: none;
+}
+
+.heroScene {
+  position: relative;
+  right: auto;
+  bottom: auto;
+  z-index: 1;
+  width: 100%;
+  max-width: 660px;
+  justify-self: end;
+}
+
+@media (max-width: 1120px) {
+  .landingHero {
+    grid-template-columns: 1fr;
+    gap: 34px;
+    min-height: auto;
+    padding: 48px 0 68px;
+  }
+
+  .landingCopy {
+    max-width: 760px;
+  }
+
+  .landingCopy h1 {
+    max-width: 760px;
+  }
+
+  .heroScene {
+    max-width: none;
+    justify-self: stretch;
+  }
+}
+
+@media (max-width: 760px) {
+  .siteBrandWordmark {
+    width: min(190px, 72vw);
+  }
+
+  .landingCopy h1 {
+    font-size: clamp(38px, 11vw, 52px);
+  }
+}

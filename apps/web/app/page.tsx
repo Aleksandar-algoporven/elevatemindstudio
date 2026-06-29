@@ -68,14 +68,13 @@ export default function Home() {
       <header className="landingNav landingContainer">
         <Link className="siteBrand" href="/" aria-label="ElevateMindStudio home">
           <Image
-            className="siteBrandLogo"
-            src="/brand/elevatemind-final/elevatemind-icon-100x100-transparent.png"
-            alt=""
-            width={36}
-            height={36}
+            className="siteBrandWordmark"
+            src="/brand/elevatemind-final/elevatemind-logo-horizontal-transparent.png"
+            alt="ElevateMindStudio"
+            width={1123}
+            height={310}
             priority
           />
-          <span>ElevateMindStudio</span>
         </Link>
         <nav aria-label="Primary navigation">
           <a href="#platform">Platform</a>
@@ -87,6 +86,25 @@ export default function Home() {
       </header>
 
       <section className="landingHero landingContainer" aria-labelledby="hero-title">
+        <div className="landingCopy">
+          <p className="eyebrow">Social media operating system</p>
+          <h1 id="hero-title">Plan, review, and publish without losing the thread.</h1>
+          <p>
+            A control room for brand memory, AI-assisted drafts, human approval,
+            and connector-safe publishing. The platform is ElevateMindStudio; the
+            first live campaign is AlgoProven.
+          </p>
+          <div className="heroActions" aria-label="Primary links">
+            <Link className="primaryLink" href="/workspace">Open workspace</Link>
+            <a className="secondaryLink" href="#workflow">View workflow</a>
+          </div>
+          <div className="heroSignalRow" aria-label="Production status">
+            <span>API live</span>
+            <span>Buffer dry-run</span>
+            <span>Legal pages ready</span>
+          </div>
+        </div>
+
         <div className="heroScene" aria-hidden="true">
           <div className="sceneTopline">
             <span>AlgoProven campaign room</span>
@@ -131,33 +149,6 @@ export default function Home() {
                 <span />
               </div>
             </div>
-          </div>
-        </div>
-
-        <div className="landingCopy">
-          <Image
-            className="heroLogo"
-            src="/brand/elevatemind-final/elevatemind-logo-horizontal-transparent.png"
-            alt="ElevateMindStudio"
-            width={1123}
-            height={310}
-            priority
-          />
-          <p className="eyebrow">Social media operating system</p>
-          <h1 id="hero-title">ElevateMind<wbr />Studio</h1>
-          <p>
-            A control room for brand memory, AI-assisted drafts, human approval,
-            and connector-safe publishing. The platform is ElevateMindStudio; the
-            first live campaign is AlgoProven.
-          </p>
-          <div className="heroActions" aria-label="Primary links">
-            <Link className="primaryLink" href="/workspace">Open workspace</Link>
-            <a className="secondaryLink" href="#workflow">View workflow</a>
-          </div>
-          <div className="heroSignalRow" aria-label="Production status">
-            <span>API live</span>
-            <span>Buffer dry-run</span>
-            <span>Legal pages ready</span>
           </div>
         </div>
       </section>

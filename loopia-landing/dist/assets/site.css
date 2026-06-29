@@ -1018,3 +1018,83 @@ h1 {
     min-height: auto;
   }
 }
+
+/* Final landing layout guard: keep hero copy and product scene in separate flow columns. */
+.brand-wordmark {
+  display: block;
+  width: min(230px, 54vw);
+  height: auto;
+  object-fit: contain;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.86fr) minmax(480px, 1.14fr);
+  gap: 58px;
+  align-items: center;
+  min-height: calc(100vh - 78px);
+  padding: 64px 0 86px;
+}
+
+.copy {
+  position: relative;
+  z-index: 1;
+  max-width: 600px;
+  padding-top: 0;
+}
+
+h1 {
+  max-width: 600px;
+  font-size: clamp(52px, 5vw, 76px);
+  line-height: 0.98;
+}
+
+.lead {
+  max-width: 590px;
+}
+
+.hero-logo {
+  display: none;
+}
+
+.hero-scene {
+  position: relative;
+  right: auto;
+  bottom: auto;
+  z-index: 1;
+  width: 100%;
+  max-width: 660px;
+  justify-self: end;
+}
+
+@media (max-width: 1120px) {
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 34px;
+    min-height: auto;
+    padding: 48px 0 68px;
+  }
+
+  .copy {
+    max-width: 760px;
+  }
+
+  h1 {
+    max-width: 760px;
+  }
+
+  .hero-scene {
+    max-width: none;
+    justify-self: stretch;
+  }
+}
+
+@media (max-width: 720px) {
+  .brand-wordmark {
+    width: min(190px, 72vw);
+  }
+
+  h1 {
+    font-size: clamp(38px, 11vw, 52px);
+  }
+}
