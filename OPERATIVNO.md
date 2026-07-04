@@ -63,6 +63,7 @@ Postojece backend rute:
 - `GET /inbox`
 - `POST /approvals/drafts/{draft_id}`
 - `POST /api/billing/webhook` na web app-u, za Stripe sandbox webhook ack
+- `POST /api/billing/checkout` na web app-u, za Stripe Checkout Session
 
 Railway backend root:
 
@@ -156,6 +157,8 @@ Stripe sandbox:
 - Webhook endpoint: `https://app.elevatemindstudio.net/api/billing/webhook`
 - Za sada endpoint samo potvrdjuje prijem eventa.
 - Kada billing bude stvarno aktivan, dodati `STRIPE_WEBHOOK_SECRET` i obraditi evente.
+- Checkout endpoint: `https://app.elevatemindstudio.net/api/billing/checkout`
+- Za Checkout treba dodati `STRIPE_SECRET_KEY` i `STRIPE_PRICE_ID`.
 
 ## 6. Deployment status
 
