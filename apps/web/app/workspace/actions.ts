@@ -86,3 +86,17 @@ export async function reviewWorkspaceDraft(formData: FormData) {
 
   revalidatePath("/workspace");
 }
+
+export async function scheduleWorkspaceDraft(formData: FormData) {
+  await postJson(`/drafts/${value(formData, "draft_id")}/schedule`, {
+    scheduled_for: value(formData, "scheduled_for")
+  });
+
+  revalidatePath("/workspace");
+}
+
+export async function queueWorkspaceDraft(formData: FormData) {
+  await postJson(`/approvals/drafts/${value(formData, "draft_id")}/queue`, {});
+
+  revalidatePath("/workspace");
+}

@@ -14,6 +14,7 @@ from app.models import (
     ChannelConnection,
     ContentDraft,
     ContentDraftCreate,
+    DraftScheduleRequest,
     InboxMessage,
     SourceItem,
     SourceIngestRequest,
@@ -238,6 +239,13 @@ def _supabase_patch(table: str, item_id: str, payload: dict) -> bool:
         return False
 
 
+def _update_memory_draft(draft: ContentDraft) -> None:
+    for index, existing in enumerate(drafts):
+        if existing.id == draft.id:
+            drafts[index] = draft
+            return
+
+
 def _supabase_insert(table: str, payload: dict) -> bool:
     if not settings.database_configured:
         return False
@@ -404,6 +412,33 @@ def create_draft_from_generated(request: ContentDraftCreate, source_summary: str
         }
     )
     return create_draft(draft_request)
+
+
+def schedule_draft(draft_id: str, request: DraftScheduleRequest) -> ContentDraft:
+    draft = find_draft(draft_id)
+    next_state = "scheduled" if draft.approval_state in {"approved", "scheduled"} else draft.approval_state
+    payload = {
+        "scheduled_for": request.scheduled_for,
+        "approval_state": next_state,
+    }
+    _supabase_patch("content_drafts", draft.id, payload)
+    updated = draft.model_copy(update=payload)
+    _update_memory_draft(updated)
+    return updated
+
+
+def queue_draft(draft_id: str) -> ContentDraft:
+    draft = find_draft(draft_id)
+    if draft.approval_state not in {"approved", "scheduled"}:
+        raise HTTPException(status_code=409, detail="Draft must be approved before queueing.")
+    if not draft.scheduled_for:
+        raise HTTPException(status_code=409, detail="Draft needs scheduled_for before queueing.")
+
+    payload = {"approval_state": "scheduled"}
+    _supabase_patch("content_drafts", draft.id, payload)
+    updated = draft.model_copy(update=payload)
+    _update_memory_draft(updated)
+    return updated
 
 
 def next_approval_state(decision: ApprovalDecision) -> str:

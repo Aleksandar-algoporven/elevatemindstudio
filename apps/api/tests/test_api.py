@@ -120,6 +120,40 @@ def test_generate_and_save_draft(monkeypatch) -> None:
     assert payload["source_refs"] == ["Source backed product update with approval workflow."]
 
 
+def test_schedule_draft_keeps_unapproved_state() -> None:
+    draft_id = "draft-test-schedule"
+    client.post(
+        "/drafts",
+        json={
+            "id": draft_id,
+            "title": "Schedule without approval",
+            "pillar": "Operations",
+            "channel": "linkedin",
+            "copy_text": "Scheduling should not bypass the approval gate.",
+        },
+    )
+
+    response = client.post(
+        f"/drafts/{draft_id}/schedule",
+        json={"scheduled_for": "2026-07-05T09:00:00Z"},
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["scheduled_for"] == "2026-07-05T09:00:00Z"
+    assert payload["approval_state"] == "draft"
+
+
+def test_queue_draft_requires_approval() -> None:
+    response = client.post("/approvals/drafts/draft-002/queue")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["gate_state"] == "blocked"
+    assert payload["approved"] is False
+    assert "approved" in payload["blockers"][0]
+
+
 def test_buffer_status_route() -> None:
     response = client.get("/integrations/buffer/status")
 

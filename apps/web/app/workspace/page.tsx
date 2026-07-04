@@ -4,7 +4,9 @@ import {
   createWorkspaceDraft,
   createWorkspaceSource,
   generateWorkspaceDraft,
-  reviewWorkspaceDraft
+  queueWorkspaceDraft,
+  reviewWorkspaceDraft,
+  scheduleWorkspaceDraft
 } from "./actions";
 
 export const dynamic = "force-dynamic";
@@ -436,6 +438,22 @@ export default async function WorkspacePage() {
                     <button name="decision" value="request_changes" type="submit">Changes</button>
                     <button name="decision" value="reject" type="submit">Reject</button>
                   </form>
+                  <div className="scheduleControls">
+                    <form action={scheduleWorkspaceDraft}>
+                      <input name="draft_id" type="hidden" value={draft.id} />
+                      <input
+                        aria-label={`Schedule ${draft.title}`}
+                        name="scheduled_for"
+                        type="datetime-local"
+                        required
+                      />
+                      <button type="submit">Schedule</button>
+                    </form>
+                    <form action={queueWorkspaceDraft}>
+                      <input name="draft_id" type="hidden" value={draft.id} />
+                      <button type="submit">Queue dry-run</button>
+                    </form>
+                  </div>
                 </article>
               ))}
             </div>

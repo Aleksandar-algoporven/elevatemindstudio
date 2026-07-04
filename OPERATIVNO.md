@@ -58,6 +58,7 @@ Postojece backend rute:
 - `GET /brands/active`
 - `GET /drafts`
 - `POST /drafts`
+- `POST /drafts/{draft_id}/schedule`
 - `POST /drafts/generate`
 - `POST /drafts/generate/save`
 - `GET /calendar`
@@ -67,6 +68,7 @@ Postojece backend rute:
 - `POST /sources/{source_id}/ingest`
 - `GET /inbox`
 - `POST /approvals/drafts/{draft_id}`
+- `POST /approvals/drafts/{draft_id}/queue`
 - `POST /api/billing/webhook` na web app-u, za Stripe sandbox webhook ack
 - `POST /api/billing/checkout` na web app-u, za Stripe Checkout Session
 

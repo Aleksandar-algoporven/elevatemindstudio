@@ -2,9 +2,9 @@ from typing import List
 
 from fastapi import APIRouter
 
-from app.models import ContentDraft, ContentDraftCreate, DraftRequest, GeneratedDraft
+from app.models import ContentDraft, ContentDraftCreate, DraftRequest, DraftScheduleRequest, GeneratedDraft
 from app.services.anthropic_client import generate_draft
-from app.store import create_draft, create_draft_from_generated, list_drafts as get_drafts
+from app.store import create_draft, create_draft_from_generated, list_drafts as get_drafts, schedule_draft
 
 router = APIRouter(prefix="/drafts", tags=["drafts"])
 
@@ -17,6 +17,11 @@ def list_drafts() -> List[ContentDraft]:
 @router.post("", response_model=ContentDraft)
 def add_draft(request: ContentDraftCreate) -> ContentDraft:
     return create_draft(request)
+
+
+@router.post("/{draft_id}/schedule", response_model=ContentDraft)
+def schedule_existing_draft(draft_id: str, request: DraftScheduleRequest) -> ContentDraft:
+    return schedule_draft(draft_id, request)
 
 
 @router.post("/generate", response_model=GeneratedDraft)

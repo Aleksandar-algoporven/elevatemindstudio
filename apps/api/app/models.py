@@ -47,6 +47,10 @@ class ContentDraftCreate(BaseModel):
     scheduled_for: Optional[str] = None
 
 
+class DraftScheduleRequest(BaseModel):
+    scheduled_for: str
+
+
 class ChannelConnection(BaseModel):
     id: str
     channel: Channel

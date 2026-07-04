@@ -1331,6 +1331,50 @@ a {
   color: var(--red);
 }
 
+.scheduleControls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 160px;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.scheduleControls form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 110px;
+  gap: 8px;
+}
+
+.scheduleControls form:last-child {
+  grid-template-columns: 1fr;
+}
+
+.scheduleControls input,
+.scheduleControls button {
+  min-height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+}
+
+.scheduleControls input {
+  min-width: 0;
+  padding: 0 10px;
+}
+
+.scheduleControls button {
+  cursor: pointer;
+  font-weight: 850;
+}
+
+.scheduleControls form:last-child button {
+  border-color: #b9decf;
+  background: #eaf7f1;
+  color: var(--green);
+}
+
 .status-approved,
 .connector-connected {
   background: #e7f5ee;
@@ -2061,7 +2105,9 @@ a {
   .channelStrip,
   .gateGrid,
   .formGridTwo,
-  .formGridFour {
+  .formGridFour,
+  .scheduleControls,
+  .scheduleControls form {
     grid-template-columns: 1fr;
   }
 
