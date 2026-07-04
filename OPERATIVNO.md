@@ -62,6 +62,7 @@ Postojece backend rute:
 - `GET /sources`
 - `GET /inbox`
 - `POST /approvals/drafts/{draft_id}`
+- `POST /api/billing/webhook` na web app-u, za Stripe sandbox webhook ack
 
 Railway backend root:
 
@@ -149,6 +150,12 @@ Popunjeno je bez prikazivanja vrednosti:
 - `LOOPIA_API_PASSWORD`
 - `TELEGRAM_BOT_URL`
 - `TELEGRAM_BOT_TOKEN`
+
+Stripe sandbox:
+
+- Webhook endpoint: `https://app.elevatemindstudio.net/api/billing/webhook`
+- Za sada endpoint samo potvrdjuje prijem eventa.
+- Kada billing bude stvarno aktivan, dodati `STRIPE_WEBHOOK_SECRET` i obraditi evente.
 
 ## 6. Deployment status
 
