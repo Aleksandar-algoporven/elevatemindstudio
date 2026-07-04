@@ -13,4 +13,5 @@ def health() -> HealthResponse:
         app=settings.app_name,
         env=settings.app_env,
         ai_configured=bool(settings.anthropic_api_key),
+        database_configured=settings.database_configured,
     )

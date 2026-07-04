@@ -29,6 +29,7 @@ https://github.com/Aleksandar-algoporven/elevatemindstudio
 - `codex_socialmedia_os.md` - velika strategija proizvoda, arhitektura, workflow-i, landing i saveti.
 - `.env.example` - javni template varijabli, bez tajni.
 - `secrets/elevatemindstudio.local.env` - lokalni tajni fajl koji punis tokenima.
+- `infra/supabase/migrations/20260704_0001_social_os_core.sql` - prva Supabase schema migracija.
 - `docs/ARCHITECTURE.md` - tehnicka arhitektura.
 - `docs/DEVELOPMENT.md` - lokalni development i API surface.
 - `docs/BRAND_ASSETS.md` - finalni logo pack i pravila upotrebe.
@@ -65,6 +66,8 @@ Postojece backend rute:
 - `POST /api/billing/webhook` na web app-u, za Stripe sandbox webhook ack
 - `POST /api/billing/checkout` na web app-u, za Stripe Checkout Session
 
+Backend sada cita `brands`, `content_drafts`, `channel_connections`, `content_sources`, `inbox_messages` i `calendar_items` iz Supabase-a kada postoje `SUPABASE_URL` i `SUPABASE_SERVICE_ROLE_KEY`. Ako ih nema ili tabela jos ne postoji, ostaje memorijski fallback.
+
 Railway backend root:
 
 ```txt
@@ -90,6 +93,7 @@ uvicorn app.main:app --host 0.0.0.0 --port $PORT
 2. Supabase
    - Napravi project.
    - Meni vracas `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_PROJECT_ID`.
+   - Za primenu migracija vracas i `DATABASE_URL` ili tacan pooler connection string iz Supabase Dashboard -> Connect.
 
 3. Upstash
    - Napravi Redis bazu.
@@ -142,7 +146,11 @@ Popunjeno je bez prikazivanja vrednosti:
 - `ANTHROPIC_API_KEY`
 - `GITHUB_TOKEN`
 - `VERCEL_TOKEN`
+- `SUPABASE_URL`
 - `SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `SUPABASE_DB_PASSWORD`
+- `SUPABASE_PROJECT_ID`
 - `UPSTASH_REDIS_REST_TOKEN`
 - `BUFFER_ACCESS_TOKEN`
 - `YOUTUBE_CLIENT_ID`

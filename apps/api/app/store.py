@@ -1,4 +1,7 @@
+from typing import Optional
+
 from fastapi import HTTPException
+import httpx
 
 from app.models import (
     ApprovalDecision,
@@ -10,6 +13,10 @@ from app.models import (
     InboxMessage,
     SourceItem,
 )
+from app.settings import settings
+
+
+SUPABASE_TIMEOUT_SECONDS = 5.0
 
 
 brand = Brand(
@@ -172,8 +179,123 @@ inbox_messages = [
 ]
 
 
+def _supabase_headers() -> dict[str, str]:
+    return {
+        "apikey": settings.supabase_service_role_key,
+        "Authorization": f"Bearer {settings.supabase_service_role_key}",
+        "Content-Type": "application/json",
+    }
+
+
+def _supabase_url(table: str) -> str:
+    return f"{settings.supabase_url.rstrip('/')}/rest/v1/{table}"
+
+
+def _supabase_get(table: str, params: Optional[dict[str, str]] = None) -> list[dict]:
+    if not settings.database_configured:
+        return []
+
+    try:
+        with httpx.Client(timeout=SUPABASE_TIMEOUT_SECONDS) as client:
+            response = client.get(
+                _supabase_url(table),
+                headers=_supabase_headers(),
+                params={"select": "*", **(params or {})},
+            )
+            response.raise_for_status()
+            payload = response.json()
+            if isinstance(payload, list):
+                return payload
+    except httpx.HTTPError:
+        return []
+    return []
+
+
+def _supabase_patch(table: str, item_id: str, payload: dict) -> bool:
+    if not settings.database_configured:
+        return False
+
+    try:
+        with httpx.Client(timeout=SUPABASE_TIMEOUT_SECONDS) as client:
+            response = client.patch(
+                _supabase_url(table),
+                headers={
+                    **_supabase_headers(),
+                    "Prefer": "return=minimal",
+                },
+                params={"id": f"eq.{item_id}"},
+                json=payload,
+            )
+            response.raise_for_status()
+            return True
+    except httpx.HTTPError:
+        return False
+
+
+def _supabase_insert(table: str, payload: dict) -> bool:
+    if not settings.database_configured:
+        return False
+
+    try:
+        with httpx.Client(timeout=SUPABASE_TIMEOUT_SECONDS) as client:
+            response = client.post(
+                _supabase_url(table),
+                headers={
+                    **_supabase_headers(),
+                    "Prefer": "return=minimal",
+                },
+                json=payload,
+            )
+            response.raise_for_status()
+            return True
+    except httpx.HTTPError:
+        return False
+
+
+def active_brand() -> Brand:
+    rows = _supabase_get("brands", {"limit": "1"})
+    if rows:
+        return Brand.model_validate(rows[0])
+    return brand
+
+
+def list_drafts() -> list[ContentDraft]:
+    rows = _supabase_get("content_drafts", {"order": "scheduled_for.asc.nullslast"})
+    if rows:
+        return [ContentDraft.model_validate(row) for row in rows]
+    return drafts
+
+
+def list_calendar() -> list[dict]:
+    rows = _supabase_get("calendar_items", {"order": "sort_order.asc"})
+    if rows:
+        return [{"day": row["day"], "posts": row["posts"], "focus": row["focus"]} for row in rows]
+    return calendar
+
+
+def list_channels() -> list[ChannelConnection]:
+    rows = _supabase_get("channel_connections", {"order": "id.asc"})
+    if rows:
+        return [ChannelConnection.model_validate(row) for row in rows]
+    return channels
+
+
+def list_sources() -> list[SourceItem]:
+    rows = _supabase_get("content_sources", {"order": "id.asc"})
+    if rows:
+        return [SourceItem.model_validate(row) for row in rows]
+    return sources
+
+
+def list_inbox_messages() -> list[InboxMessage]:
+    rows = _supabase_get("inbox_messages", {"order": "created_at.desc"})
+    if rows:
+        return [InboxMessage.model_validate(row) for row in rows]
+    return inbox_messages
+
+
 def find_draft(draft_id: str) -> ContentDraft:
-    for draft in drafts:
+    for draft in list_drafts():
         if draft.id == draft_id:
             return draft
     raise HTTPException(status_code=404, detail="Draft not found")
@@ -192,6 +314,17 @@ def apply_approval(draft_id: str, request: ApprovalRequest) -> ApprovalResult:
     previous_state = draft.approval_state
     next_state = next_approval_state(request.decision)
     draft.approval_state = next_state
+    _supabase_patch("content_drafts", draft.id, {"approval_state": next_state})
+    _supabase_insert(
+        "approval_events",
+        {
+            "draft_id": draft.id,
+            "previous_state": previous_state,
+            "next_state": next_state,
+            "reviewer": request.reviewer,
+            "notes": request.notes,
+        },
+    )
 
     return ApprovalResult(
         draft_id=draft.id,

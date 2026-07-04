@@ -4,14 +4,14 @@ from fastapi import APIRouter
 
 from app.models import ContentDraft, DraftRequest, GeneratedDraft
 from app.services.anthropic_client import generate_draft
-from app.store import drafts
+from app.store import list_drafts as get_drafts
 
 router = APIRouter(prefix="/drafts", tags=["drafts"])
 
 
 @router.get("", response_model=List[ContentDraft])
 def list_drafts() -> List[ContentDraft]:
-    return drafts
+    return get_drafts()
 
 
 @router.post("/generate", response_model=GeneratedDraft)

@@ -46,6 +46,8 @@ class Settings:
     youtube_channel_id: str = os.getenv("YOUTUBE_CHANNEL_ID", "")
     youtube_redirect_uri: str = os.getenv("YOUTUBE_REDIRECT_URI", "")
     youtube_scopes: str = os.getenv("YOUTUBE_SCOPES", DEFAULT_YOUTUBE_SCOPES)
+    supabase_url: str = os.getenv("SUPABASE_URL", "")
+    supabase_service_role_key: str = os.getenv("SUPABASE_SERVICE_ROLE_KEY", "")
 
     @property
     def linkedin_scope_list(self) -> list[str]:
@@ -54,6 +56,10 @@ class Settings:
     @property
     def youtube_scope_list(self) -> list[str]:
         return [scope for scope in self.youtube_scopes.replace(",", " ").split() if scope]
+
+    @property
+    def database_configured(self) -> bool:
+        return bool(self.supabase_url and self.supabase_service_role_key)
 
 
 settings = Settings()

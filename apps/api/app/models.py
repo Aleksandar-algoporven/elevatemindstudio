@@ -288,3 +288,4 @@ class HealthResponse(BaseModel):
     app: str
     env: str
     ai_configured: bool
+    database_configured: bool
