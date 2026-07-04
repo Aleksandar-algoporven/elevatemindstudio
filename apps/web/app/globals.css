@@ -1445,6 +1445,16 @@ a {
   gap: 12px;
 }
 
+.formGridFour {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.aiDraftForm {
+  gap: 14px;
+}
+
 .formButton {
   width: 100%;
   border: 0;
@@ -2050,7 +2060,8 @@ a {
   .sourceMatrix,
   .channelStrip,
   .gateGrid,
-  .formGridTwo {
+  .formGridTwo,
+  .formGridFour {
     grid-template-columns: 1fr;
   }
 

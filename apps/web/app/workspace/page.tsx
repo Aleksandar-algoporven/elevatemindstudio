@@ -1,6 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
-import { createWorkspaceDraft, createWorkspaceSource, reviewWorkspaceDraft } from "./actions";
+import {
+  createWorkspaceDraft,
+  createWorkspaceSource,
+  generateWorkspaceDraft,
+  reviewWorkspaceDraft
+} from "./actions";
 
 export const dynamic = "force-dynamic";
 
@@ -349,6 +354,56 @@ export default async function WorkspacePage() {
               <button className="primaryLink formButton" type="submit">Create draft</button>
             </form>
           </div>
+        </section>
+
+        <section className="workspacePanel">
+          <div className="workspacePanelHeader">
+            <div>
+              <p className="eyebrow">Claude generation</p>
+              <h2>Generate from source context</h2>
+            </div>
+            <span className="smallBadge">Review first</span>
+          </div>
+          <form className="workspaceForm aiDraftForm" action={generateWorkspaceDraft}>
+            <div className="formGridFour">
+              <label>
+                <span>Brand</span>
+                <input name="brand_name" type="text" defaultValue="AlgoProven" required />
+              </label>
+              <label>
+                <span>Pillar</span>
+                <input name="pillar" type="text" placeholder="Trust" required minLength={2} />
+              </label>
+              <label>
+                <span>Channel</span>
+                <select name="channel" defaultValue="linkedin">
+                  <option value="linkedin">LinkedIn</option>
+                  <option value="x">X</option>
+                  <option value="instagram">Instagram</option>
+                  <option value="youtube">YouTube</option>
+                  <option value="discord">Discord</option>
+                  <option value="reddit">Reddit</option>
+                  <option value="substack">Substack</option>
+                  <option value="bluesky">Bluesky</option>
+                </select>
+              </label>
+              <label>
+                <span>Goal</span>
+                <input name="goal" type="text" defaultValue="Generate a review-ready social post." />
+              </label>
+            </div>
+            <label>
+              <span>Source context</span>
+              <textarea
+                name="source_summary"
+                placeholder="Paste changelog notes, blog paragraph, product update, meeting note, or source-backed idea."
+                required
+                minLength={10}
+                rows={5}
+              />
+            </label>
+            <button className="primaryLink formButton" type="submit">Generate review draft</button>
+          </form>
         </section>
 
         <section className="workspaceGrid">

@@ -27,6 +27,8 @@ async function postJson(path: string, payload: Record<string, unknown>) {
   if (!response.ok) {
     throw new Error(`Workspace action failed: ${path}`);
   }
+
+  return response.json() as Promise<Record<string, unknown>>;
 }
 
 export async function createWorkspaceSource(formData: FormData) {
@@ -55,6 +57,29 @@ export async function createWorkspaceDraft(formData: FormData) {
     source_refs: sourceRefs,
     copy_text: value(formData, "copy_text"),
     scheduled_for: optionalValue(formData, "scheduled_for")
+  });
+
+  revalidatePath("/workspace");
+}
+
+export async function generateWorkspaceDraft(formData: FormData) {
+  const sourceSummary = value(formData, "source_summary");
+  const generated = await postJson("/drafts/generate", {
+    brand_name: value(formData, "brand_name") || "AlgoProven",
+    pillar: value(formData, "pillar"),
+    channel: value(formData, "channel"),
+    source_summary: sourceSummary,
+    goal: value(formData, "goal") || "Generate a review-ready social post."
+  });
+
+  await postJson("/drafts", {
+    title: generated.title,
+    pillar: generated.pillar,
+    channel: generated.channel,
+    approval_state: "needs_review",
+    risk_level: generated.risk_level,
+    source_refs: [sourceSummary.slice(0, 140)],
+    copy_text: generated.copy_text
   });
 
   revalidatePath("/workspace");
