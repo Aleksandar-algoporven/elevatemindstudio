@@ -1358,6 +1358,63 @@ a {
   padding: 14px;
 }
 
+.workspaceForm {
+  display: grid;
+  gap: 12px;
+}
+
+.workspaceForm label {
+  display: grid;
+  gap: 7px;
+}
+
+.workspaceForm label span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.workspaceForm input,
+.workspaceForm select,
+.workspaceForm textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 11px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcfb;
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+}
+
+.workspaceForm textarea {
+  min-height: 132px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.workspaceForm input:focus,
+.workspaceForm select:focus,
+.workspaceForm textarea:focus {
+  border-color: #7bb49e;
+  box-shadow: 0 0 0 3px rgba(31, 122, 85, 0.12);
+  outline: 0;
+}
+
+.formGridTwo {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.formButton {
+  width: 100%;
+  border: 0;
+  cursor: pointer;
+}
+
 .channelStrip {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1956,7 +2013,8 @@ a {
   .publishPreview,
   .sourceMatrix,
   .channelStrip,
-  .gateGrid {
+  .gateGrid,
+  .formGridTwo {
     grid-template-columns: 1fr;
   }
 

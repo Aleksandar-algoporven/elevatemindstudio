@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { createWorkspaceDraft, createWorkspaceSource } from "./actions";
 
 export const dynamic = "force-dynamic";
 
@@ -209,6 +210,7 @@ export default async function WorkspacePage() {
         </Link>
         <nav aria-label="Workspace sections">
           <a href="#overview">Overview</a>
+          <a href="#inputs">Inputs</a>
           <a href="#review">Review</a>
           <a href="#connectors">Connectors</a>
           <a href="#publish">Publish</a>
@@ -242,6 +244,111 @@ export default async function WorkspacePage() {
             <span>Publish dry-run</span>
             <strong>{publishPlan?.accepted ? "Ready" : "Blocked"}</strong>
           </article>
+        </section>
+
+        <section className="workspaceGrid" id="inputs">
+          <div className="workspacePanel">
+            <div className="workspacePanelHeader">
+              <div>
+                <p className="eyebrow">Source intake</p>
+                <h2>Add content source</h2>
+              </div>
+            </div>
+            <form className="workspaceForm" action={createWorkspaceSource}>
+              <label>
+                <span>Name</span>
+                <input name="name" type="text" placeholder="Founder notes" required minLength={2} />
+              </label>
+              <div className="formGridTwo">
+                <label>
+                  <span>Type</span>
+                  <select name="source_type" defaultValue="manual">
+                    <option value="manual">Manual</option>
+                    <option value="website">Website</option>
+                    <option value="blog">Blog</option>
+                    <option value="repo">Repository</option>
+                    <option value="document">Document</option>
+                    <option value="feed">Feed</option>
+                  </select>
+                </label>
+                <label>
+                  <span>Status</span>
+                  <select name="status" defaultValue="pending">
+                    <option value="pending">Pending</option>
+                    <option value="manual">Manual</option>
+                    <option value="syncing">Syncing</option>
+                    <option value="ready">Ready</option>
+                  </select>
+                </label>
+              </div>
+              <label>
+                <span>URL</span>
+                <input name="url" type="url" placeholder="https://example.com/source" />
+              </label>
+              <label>
+                <span>Items</span>
+                <input name="item_count" type="number" min={0} defaultValue={0} />
+              </label>
+              <button className="primaryLink formButton" type="submit">Add source</button>
+            </form>
+          </div>
+
+          <div className="workspacePanel">
+            <div className="workspacePanelHeader">
+              <div>
+                <p className="eyebrow">Draft composer</p>
+                <h2>Create review draft</h2>
+              </div>
+            </div>
+            <form className="workspaceForm" action={createWorkspaceDraft}>
+              <label>
+                <span>Title</span>
+                <input name="title" type="text" placeholder="Weekly product proof" required minLength={2} />
+              </label>
+              <div className="formGridTwo">
+                <label>
+                  <span>Pillar</span>
+                  <input name="pillar" type="text" placeholder="Trust" required minLength={2} />
+                </label>
+                <label>
+                  <span>Channel</span>
+                  <select name="channel" defaultValue="linkedin">
+                    <option value="linkedin">LinkedIn</option>
+                    <option value="x">X</option>
+                    <option value="instagram">Instagram</option>
+                    <option value="youtube">YouTube</option>
+                    <option value="discord">Discord</option>
+                    <option value="reddit">Reddit</option>
+                    <option value="substack">Substack</option>
+                    <option value="bluesky">Bluesky</option>
+                  </select>
+                </label>
+              </div>
+              <div className="formGridTwo">
+                <label>
+                  <span>Risk</span>
+                  <select name="risk_level" defaultValue="low">
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                  </select>
+                </label>
+                <label>
+                  <span>Schedule</span>
+                  <input name="scheduled_for" type="datetime-local" />
+                </label>
+              </div>
+              <label>
+                <span>Sources</span>
+                <input name="source_refs" type="text" placeholder="Founder notes, changelog" />
+              </label>
+              <label>
+                <span>Copy</span>
+                <textarea name="copy_text" placeholder="Draft copy..." required minLength={1} rows={6} />
+              </label>
+              <button className="primaryLink formButton" type="submit">Create draft</button>
+            </form>
+          </div>
         </section>
 
         <section className="workspaceGrid">
