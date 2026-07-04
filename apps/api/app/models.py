@@ -12,6 +12,7 @@ SourceType = Literal["website", "blog", "repo", "document", "feed", "manual"]
 ApprovalDecision = Literal["approve", "reject", "request_changes"]
 InboxPriority = Literal["low", "normal", "high", "urgent"]
 PublishGateState = Literal["ready", "blocked", "waiting_connector"]
+ReadinessState = Literal["ready", "watch", "blocked"]
 
 
 class Brand(BaseModel):
@@ -342,3 +343,18 @@ class HealthResponse(BaseModel):
     env: str
     ai_configured: bool
     database_configured: bool
+
+
+class ReadinessCheck(BaseModel):
+    key: str
+    label: str
+    state: ReadinessState
+    detail: str
+    action: str = ""
+
+
+class ReadinessResponse(BaseModel):
+    ready: int
+    watch: int
+    blocked: int
+    checks: List[ReadinessCheck]

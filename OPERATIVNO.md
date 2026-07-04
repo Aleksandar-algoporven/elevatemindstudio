@@ -55,6 +55,7 @@ apps/api
 Postojece backend rute:
 
 - `GET /health`
+- `GET /ops/readiness`
 - `GET /brands/active`
 - `PUT /brands/active`
 - `GET /drafts`

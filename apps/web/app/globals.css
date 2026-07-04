@@ -1291,13 +1291,40 @@ a {
   gap: 12px;
 }
 
-.inboxCard {
+.readinessGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.inboxCard,
+.readinessCard {
   display: grid;
   gap: 12px;
 }
 
-.inboxCard p {
+.inboxCard p,
+.readinessCard p {
   margin: 0;
+}
+
+.readinessCard {
+  min-height: 150px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcfb;
+}
+
+.readinessCard p,
+.readinessCard > span {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.readinessCard > span {
+  font-weight: 800;
 }
 
 .inboxCard blockquote {
@@ -2149,6 +2176,7 @@ a {
   .publishPreview,
   .sourceMatrix,
   .inboxGrid,
+  .readinessGrid,
   .channelStrip,
   .gateGrid,
   .formGridTwo,

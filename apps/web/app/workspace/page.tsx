@@ -98,6 +98,21 @@ type InboxMessage = {
   needs_human: boolean;
 };
 
+type ReadinessCheck = {
+  key: string;
+  label: string;
+  state: "ready" | "watch" | "blocked";
+  detail: string;
+  action: string;
+};
+
+type ReadinessResponse = {
+  ready: number;
+  watch: number;
+  blocked: number;
+  checks: ReadinessCheck[];
+};
+
 type PublishPlan = {
   accepted: boolean;
   dry_run: boolean;
@@ -145,7 +160,7 @@ function summarizeIntegration(status: {
 }
 
 export default async function WorkspacePage() {
-  const [brand, buffer, youtube, discord, linkedin, drafts, sources, inbox, publishPlan] = await Promise.all([
+  const [brand, buffer, youtube, discord, linkedin, drafts, sources, inbox, readiness, publishPlan] = await Promise.all([
     fetchJson<Brand>("/brands/active"),
     fetchJson<BufferStatus>("/integrations/buffer/status"),
     fetchJson<YouTubeStatus>("/integrations/youtube/status"),
@@ -154,6 +169,7 @@ export default async function WorkspacePage() {
     fetchJson<Draft[]>("/drafts"),
     fetchJson<SourceItem[]>("/sources"),
     fetchJson<InboxMessage[]>("/inbox"),
+    fetchJson<ReadinessResponse>("/ops/readiness"),
     fetchJson<PublishPlan>("/integrations/buffer/publish", {
       method: "POST",
       body: JSON.stringify({
@@ -204,6 +220,7 @@ export default async function WorkspacePage() {
   };
   const sourceItems = sources || [];
   const inboxItems = inbox || [];
+  const readinessChecks = readiness?.checks || [];
   const humanInboxItems = inboxItems.filter((message) => message.needs_human);
   const readyChannels = buffer?.channels.filter((channel) => channel.products.includes("publish")) || [];
   const approvedDrafts = reviewDrafts.filter((draft) => draft.approval_state === "approved");
@@ -334,6 +351,32 @@ export default async function WorkspacePage() {
             </label>
             <button className="primaryLink formButton" type="submit">Save guardrails</button>
           </form>
+        </section>
+
+        <section className="workspacePanel">
+          <div className="workspacePanelHeader">
+            <div>
+              <p className="eyebrow">System readiness</p>
+              <h2>Operational checklist</h2>
+            </div>
+            <span className="smallBadge">
+              {readiness?.ready ?? 0} ready / {readiness?.blocked ?? 0} blocked
+            </span>
+          </div>
+          <div className="readinessGrid">
+            {readinessChecks.map((item) => (
+              <article className="readinessCard" key={item.key}>
+                <div className="itemTitleLine">
+                  <strong>{item.label}</strong>
+                  <span className={`statusChip connector-${item.state === "ready" ? "connected" : item.state === "watch" ? "partial" : "blocked"}`}>
+                    {item.state}
+                  </span>
+                </div>
+                <p>{item.detail}</p>
+                {item.action ? <span>{item.action}</span> : null}
+              </article>
+            ))}
+          </div>
         </section>
 
         <section className="workspaceGrid" id="inputs">

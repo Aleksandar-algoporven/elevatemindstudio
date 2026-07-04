@@ -19,6 +19,16 @@ def test_health() -> None:
     assert response.json()["status"] == "ok"
 
 
+def test_ops_readiness() -> None:
+    response = client.get("/ops/readiness")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert "checks" in payload
+    assert payload["ready"] + payload["watch"] + payload["blocked"] == len(payload["checks"])
+    assert any(check["key"] == "ai" for check in payload["checks"])
+
+
 def test_drafts() -> None:
     response = client.get("/drafts")
     assert response.status_code == 200

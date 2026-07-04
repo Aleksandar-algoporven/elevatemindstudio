@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routers import approvals, brands, calendar, channels, drafts, health, inbox, integrations, sources
+from app.routers import approvals, brands, calendar, channels, drafts, health, inbox, integrations, ops, sources
 from app.settings import settings
 
 app = FastAPI(title=settings.app_name, version="0.1.0")
@@ -23,3 +23,4 @@ app.include_router(sources.router)
 app.include_router(inbox.router)
 app.include_router(approvals.router)
 app.include_router(integrations.router)
+app.include_router(ops.router)
