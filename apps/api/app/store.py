@@ -11,6 +11,7 @@ from app.models import (
     ApprovalRequest,
     ApprovalResult,
     Brand,
+    BrandUpdateRequest,
     ChannelConnection,
     ContentDraft,
     ContentDraftCreate,
@@ -306,6 +307,21 @@ def active_brand() -> Brand:
     if rows:
         return Brand.model_validate(rows[0])
     return brand
+
+
+def update_active_brand(request: BrandUpdateRequest) -> Brand:
+    payload = {
+        "id": brand.id,
+        **request.model_dump(),
+    }
+    row = _supabase_upsert("brands", payload)
+    updated = Brand.model_validate(row or payload)
+    brand.name = updated.name
+    brand.domain = updated.domain
+    brand.tone = updated.tone
+    brand.autonomy_level = updated.autonomy_level
+    brand.prohibited_claims = updated.prohibited_claims
+    return updated
 
 
 def list_drafts() -> list[ContentDraft]:

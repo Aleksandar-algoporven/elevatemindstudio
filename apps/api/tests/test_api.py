@@ -25,6 +25,25 @@ def test_drafts() -> None:
     assert len(response.json()) >= 1
 
 
+def test_update_active_brand() -> None:
+    response = client.put(
+        "/brands/active",
+        json={
+            "name": "AlgoProven",
+            "domain": "algoproven.com",
+            "tone": "Precise, evidence-backed, and review-led.",
+            "autonomy_level": 1,
+            "prohibited_claims": ["guaranteed returns", "risk-free trading"],
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["name"] == "AlgoProven"
+    assert payload["autonomy_level"] == 1
+    assert "guaranteed returns" in payload["prohibited_claims"]
+
+
 def test_channels_sources_and_inbox() -> None:
     channels = client.get("/channels")
     sources = client.get("/sources")

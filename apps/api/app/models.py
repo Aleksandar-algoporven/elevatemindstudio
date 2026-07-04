@@ -23,6 +23,14 @@ class Brand(BaseModel):
     prohibited_claims: List[str]
 
 
+class BrandUpdateRequest(BaseModel):
+    name: str = Field(min_length=2, max_length=120)
+    domain: str = Field(min_length=2, max_length=160)
+    tone: str = Field(min_length=5, max_length=1000)
+    autonomy_level: int = Field(ge=0, le=4)
+    prohibited_claims: List[str] = Field(default_factory=list)
+
+
 class ContentDraft(BaseModel):
     id: str
     title: str

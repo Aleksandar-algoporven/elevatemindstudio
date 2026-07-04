@@ -15,8 +15,16 @@ function optionalValue(formData: FormData, key: string) {
 }
 
 async function postJson(path: string, payload: Record<string, unknown>) {
+  return sendJson(path, "POST", payload);
+}
+
+async function putJson(path: string, payload: Record<string, unknown>) {
+  return sendJson(path, "PUT", payload);
+}
+
+async function sendJson(path: string, method: "POST" | "PUT", payload: Record<string, unknown>) {
   const response = await fetch(`${apiBase}${path}`, {
-    method: "POST",
+    method,
     headers: {
       "Content-Type": "application/json"
     },
@@ -29,6 +37,23 @@ async function postJson(path: string, payload: Record<string, unknown>) {
   }
 
   return response.json() as Promise<Record<string, unknown>>;
+}
+
+export async function updateWorkspaceBrand(formData: FormData) {
+  const prohibitedClaims = value(formData, "prohibited_claims")
+    .split("\n")
+    .map((item) => item.trim())
+    .filter(Boolean);
+
+  await putJson("/brands/active", {
+    name: value(formData, "name"),
+    domain: value(formData, "domain"),
+    tone: value(formData, "tone"),
+    autonomy_level: Number(value(formData, "autonomy_level") || "1"),
+    prohibited_claims: prohibitedClaims
+  });
+
+  revalidatePath("/workspace");
 }
 
 export async function createWorkspaceSource(formData: FormData) {

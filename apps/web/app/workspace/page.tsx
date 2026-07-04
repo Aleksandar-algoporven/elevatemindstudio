@@ -7,7 +7,8 @@ import {
   queueWorkspaceDraft,
   resolveWorkspaceInboxMessage,
   reviewWorkspaceDraft,
-  scheduleWorkspaceDraft
+  scheduleWorkspaceDraft,
+  updateWorkspaceBrand
 } from "./actions";
 
 export const dynamic = "force-dynamic";
@@ -17,6 +18,15 @@ type IntegrationSummary = {
   state: "connected" | "partial" | "blocked";
   detail: string;
   notes: string[];
+};
+
+type Brand = {
+  id: string;
+  name: string;
+  domain: string;
+  tone: string;
+  autonomy_level: number;
+  prohibited_claims: string[];
 };
 
 type BufferChannel = {
@@ -135,7 +145,8 @@ function summarizeIntegration(status: {
 }
 
 export default async function WorkspacePage() {
-  const [buffer, youtube, discord, linkedin, drafts, sources, inbox, publishPlan] = await Promise.all([
+  const [brand, buffer, youtube, discord, linkedin, drafts, sources, inbox, publishPlan] = await Promise.all([
+    fetchJson<Brand>("/brands/active"),
     fetchJson<BufferStatus>("/integrations/buffer/status"),
     fetchJson<YouTubeStatus>("/integrations/youtube/status"),
     fetchJson<DiscordStatus>("/integrations/discord/status"),
@@ -183,6 +194,14 @@ export default async function WorkspacePage() {
   ];
 
   const reviewDrafts = drafts || [];
+  const activeBrand = brand || {
+    id: "brand-algoproven",
+    name: "AlgoProven",
+    domain: "algoproven.com",
+    tone: "Precise, evidence-backed, product-led, and operator-aware.",
+    autonomy_level: 1,
+    prohibited_claims: []
+  };
   const sourceItems = sources || [];
   const inboxItems = inbox || [];
   const humanInboxItems = inboxItems.filter((message) => message.needs_human);
@@ -251,8 +270,8 @@ export default async function WorkspacePage() {
 
         <section className="opsGrid" aria-label="Operating metrics">
           <article>
-            <span>Buffer channels</span>
-            <strong>{buffer?.channels_count ?? "-"}</strong>
+            <span>Brand</span>
+            <strong>{activeBrand.name}</strong>
           </article>
           <article>
             <span>Drafts</span>
@@ -266,6 +285,55 @@ export default async function WorkspacePage() {
             <span>Inbox needs human</span>
             <strong>{humanInboxItems.length}</strong>
           </article>
+        </section>
+
+        <section className="workspacePanel">
+          <div className="workspacePanelHeader">
+            <div>
+              <p className="eyebrow">Brand guardrails</p>
+              <h2>Voice, autonomy, claims</h2>
+            </div>
+            <span className="smallBadge">Level {activeBrand.autonomy_level}</span>
+          </div>
+          <form className="workspaceForm" action={updateWorkspaceBrand}>
+            <div className="formGridFour">
+              <label>
+                <span>Name</span>
+                <input name="name" type="text" defaultValue={activeBrand.name} required minLength={2} />
+              </label>
+              <label>
+                <span>Domain</span>
+                <input name="domain" type="text" defaultValue={activeBrand.domain} required minLength={2} />
+              </label>
+              <label>
+                <span>Autonomy</span>
+                <select name="autonomy_level" defaultValue={String(activeBrand.autonomy_level)}>
+                  <option value="0">0 - manual only</option>
+                  <option value="1">1 - approval required</option>
+                  <option value="2">2 - low risk allowed</option>
+                  <option value="3">3 - scheduled automation</option>
+                  <option value="4">4 - full automation</option>
+                </select>
+              </label>
+              <label>
+                <span>Claims</span>
+                <input value={`${activeBrand.prohibited_claims.length} blocked`} readOnly />
+              </label>
+            </div>
+            <label>
+              <span>Tone</span>
+              <textarea name="tone" defaultValue={activeBrand.tone} required minLength={5} rows={3} />
+            </label>
+            <label>
+              <span>Prohibited claims</span>
+              <textarea
+                name="prohibited_claims"
+                defaultValue={activeBrand.prohibited_claims.join("\n")}
+                rows={4}
+              />
+            </label>
+            <button className="primaryLink formButton" type="submit">Save guardrails</button>
+          </form>
         </section>
 
         <section className="workspaceGrid" id="inputs">

@@ -56,6 +56,7 @@ Postojece backend rute:
 
 - `GET /health`
 - `GET /brands/active`
+- `PUT /brands/active`
 - `GET /drafts`
 - `POST /drafts`
 - `POST /drafts/{draft_id}/schedule`
