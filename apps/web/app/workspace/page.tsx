@@ -69,6 +69,12 @@ type LinkedInStatus = {
   notes: string[];
 };
 
+type AuthorizationUrl = {
+  configured: boolean;
+  authorization_url?: string | null;
+  notes: string[];
+};
+
 type Draft = {
   id: string;
   title: string;
@@ -160,12 +166,27 @@ function summarizeIntegration(status: {
 }
 
 export default async function WorkspacePage() {
-  const [brand, buffer, youtube, discord, linkedin, drafts, sources, inbox, readiness, publishPlan] = await Promise.all([
+  const [
+    brand,
+    buffer,
+    youtube,
+    discord,
+    linkedin,
+    linkedinAuth,
+    youtubeAuth,
+    drafts,
+    sources,
+    inbox,
+    readiness,
+    publishPlan
+  ] = await Promise.all([
     fetchJson<Brand>("/brands/active"),
     fetchJson<BufferStatus>("/integrations/buffer/status"),
     fetchJson<YouTubeStatus>("/integrations/youtube/status"),
     fetchJson<DiscordStatus>("/integrations/discord/status"),
     fetchJson<LinkedInStatus>("/integrations/linkedin/status"),
+    fetchJson<AuthorizationUrl>("/integrations/linkedin/oauth/authorize"),
+    fetchJson<AuthorizationUrl>("/integrations/youtube/oauth/authorize"),
     fetchJson<Draft[]>("/drafts"),
     fetchJson<SourceItem[]>("/sources"),
     fetchJson<InboxMessage[]>("/inbox"),
@@ -602,6 +623,15 @@ export default async function WorkspacePage() {
                   <span className={`statusChip connector-${integration.state}`}>{integration.state}</span>
                 </article>
               ))}
+            </div>
+            <div className="connectorActions">
+              {linkedinAuth?.authorization_url ? (
+                <a href={linkedinAuth.authorization_url}>LinkedIn OAuth</a>
+              ) : null}
+              {youtubeAuth?.authorization_url ? (
+                <a href={youtubeAuth.authorization_url}>YouTube OAuth</a>
+              ) : null}
+              <a href="https://api.elevatemindstudio.net/ops/readiness">Readiness JSON</a>
             </div>
           </aside>
         </section>

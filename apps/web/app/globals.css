@@ -1480,6 +1480,25 @@ a {
   font-size: 13px;
 }
 
+.connectorActions {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.connectorActions a {
+  display: flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 850;
+}
+
 .publishPreview {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
