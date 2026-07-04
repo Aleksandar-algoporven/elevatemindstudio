@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { createWorkspaceDraft, createWorkspaceSource } from "./actions";
+import { createWorkspaceDraft, createWorkspaceSource, reviewWorkspaceDraft } from "./actions";
 
 export const dynamic = "force-dynamic";
 
@@ -375,6 +375,12 @@ export default async function WorkspacePage() {
                     <span>{draft.risk_level} risk</span>
                     <span>{draft.scheduled_for || "unscheduled"}</span>
                   </div>
+                  <form className="approvalControls" action={reviewWorkspaceDraft}>
+                    <input name="draft_id" type="hidden" value={draft.id} />
+                    <button name="decision" value="approve" type="submit">Approve</button>
+                    <button name="decision" value="request_changes" type="submit">Changes</button>
+                    <button name="decision" value="reject" type="submit">Reject</button>
+                  </form>
                 </article>
               ))}
             </div>

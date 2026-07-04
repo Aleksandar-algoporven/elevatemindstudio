@@ -1295,6 +1295,42 @@ a {
   font-weight: 800;
 }
 
+.approvalControls {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.approvalControls button {
+  min-height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.approvalControls button[value="approve"] {
+  border-color: #b9decf;
+  background: #eaf7f1;
+  color: var(--green);
+}
+
+.approvalControls button[value="request_changes"] {
+  border-color: #ead69f;
+  background: #fff7df;
+  color: var(--amber);
+}
+
+.approvalControls button[value="reject"] {
+  border-color: #efbbb5;
+  background: #fff0ee;
+  color: var(--red);
+}
+
 .status-approved,
 .connector-connected {
   background: #e7f5ee;

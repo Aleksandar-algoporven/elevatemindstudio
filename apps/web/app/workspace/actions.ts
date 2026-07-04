@@ -59,3 +59,16 @@ export async function createWorkspaceDraft(formData: FormData) {
 
   revalidatePath("/workspace");
 }
+
+export async function reviewWorkspaceDraft(formData: FormData) {
+  const draftId = value(formData, "draft_id");
+  const decision = value(formData, "decision");
+
+  await postJson(`/approvals/drafts/${draftId}`, {
+    decision,
+    reviewer: "Aleksandar",
+    notes: `Workspace ${decision.replace("_", " ")} action`
+  });
+
+  revalidatePath("/workspace");
+}
