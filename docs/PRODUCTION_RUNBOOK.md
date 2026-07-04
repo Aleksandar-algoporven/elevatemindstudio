@@ -6,6 +6,7 @@
 - Legal pages: `https://elevatemindstudio.net/privacy/`, `https://elevatemindstudio.net/terms/`
 - Operator workspace: `https://app.elevatemindstudio.net/workspace`
 - API health: `https://api.elevatemindstudio.net/health`
+- API readiness: `https://api.elevatemindstudio.net/ops/readiness`
 - Vercel alias: `https://elevatemindstudio-web.vercel.app`
 
 ## Hosting Map
@@ -53,7 +54,7 @@ Use Loopia FTP/web-hosting credentials here. Loopia DNS/API credentials are used
 
 Current note: Loopia static upload uses `FTP_HOST`, `FTP_USER`, and `FTP_PASS` from the local secret file. The DNS/API credentials are separate and should not be assumed to work for file upload.
 
-Railway CLI currently needs a fresh valid token before env changes can be automated.
+Railway CLI is usable with the local `RAILWAY_TOKEN` in the secret file.
 
 ## Current Connector State
 
@@ -62,6 +63,18 @@ Railway CLI currently needs a fresh valid token before env changes can be automa
 - LinkedIn: waiting for Community Management API approval.
 - Discord: bot credentials are wired; guild/channel IDs depend on verification/server setup.
 - Meta/Facebook/Instagram: intentionally paused for now.
+
+## Current Product Surface
+
+- Brand guardrails editor.
+- Source intake.
+- Manual draft composer.
+- Claude draft generation saved to Supabase as `needs_review`.
+- Review controls: approve, request changes, reject.
+- Scheduling controls.
+- Queue dry-run gate through Buffer.
+- Inbox triage with suggested replies and handled state.
+- Operational readiness dashboard.
 
 ## Safety Gate
 
