@@ -57,10 +57,13 @@ Postojece backend rute:
 - `GET /health`
 - `GET /brands/active`
 - `GET /drafts`
+- `POST /drafts`
 - `POST /drafts/generate`
 - `GET /calendar`
 - `GET /channels`
 - `GET /sources`
+- `POST /sources`
+- `POST /sources/{source_id}/ingest`
 - `GET /inbox`
 - `POST /approvals/drafts/{draft_id}`
 - `POST /api/billing/webhook` na web app-u, za Stripe sandbox webhook ack

@@ -38,6 +38,57 @@ def test_channels_sources_and_inbox() -> None:
     assert inbox.json()[0]["needs_human"] is True
 
 
+def test_create_source_and_mark_ingested() -> None:
+    source_id = "source-test-api-notes"
+    create_response = client.post(
+        "/sources",
+        json={
+            "id": source_id,
+            "name": "API notes for content testing",
+            "source_type": "manual",
+            "status": "manual",
+            "item_count": 2,
+        },
+    )
+
+    assert create_response.status_code == 200
+    assert create_response.json()["id"] == source_id
+    assert create_response.json()["item_count"] == 2
+
+    ingest_response = client.post(
+        f"/sources/{source_id}/ingest",
+        json={"item_count_delta": 3, "status": "ready", "last_ingested_at": "2026-07-04T10:00:00Z"},
+    )
+
+    assert ingest_response.status_code == 200
+    payload = ingest_response.json()
+    assert payload["status"] == "ready"
+    assert payload["item_count"] == 5
+    assert payload["last_ingested_at"] == "2026-07-04T10:00:00Z"
+
+
+def test_create_draft() -> None:
+    draft_id = "draft-test-api-create"
+    response = client.post(
+        "/drafts",
+        json={
+            "id": draft_id,
+            "title": "Manual source insight",
+            "pillar": "Education",
+            "channel": "linkedin",
+            "risk_level": "low",
+            "source_refs": ["API notes for content testing"],
+            "copy_text": "A source-backed note can become a review-ready post before it becomes a scheduled post.",
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["id"] == draft_id
+    assert payload["approval_state"] == "draft"
+    assert payload["source_refs"] == ["API notes for content testing"]
+
+
 def test_buffer_status_route() -> None:
     response = client.get("/integrations/buffer/status")
 

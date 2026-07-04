@@ -35,6 +35,18 @@ class ContentDraft(BaseModel):
     scheduled_for: Optional[str] = None
 
 
+class ContentDraftCreate(BaseModel):
+    id: Optional[str] = None
+    title: str = Field(min_length=2, max_length=160)
+    pillar: str = Field(min_length=2, max_length=120)
+    channel: Channel
+    approval_state: ApprovalState = "draft"
+    risk_level: RiskLevel = "low"
+    source_refs: List[str] = Field(default_factory=list)
+    copy_text: str = Field(min_length=1, max_length=5000)
+    scheduled_for: Optional[str] = None
+
+
 class ChannelConnection(BaseModel):
     id: str
     channel: Channel
@@ -237,6 +249,22 @@ class SourceItem(BaseModel):
     status: SourceStatus
     url: Optional[str] = None
     item_count: int = Field(ge=0)
+    last_ingested_at: Optional[str] = None
+
+
+class SourceUpsertRequest(BaseModel):
+    id: Optional[str] = None
+    name: str = Field(min_length=2, max_length=160)
+    source_type: SourceType
+    status: SourceStatus = "pending"
+    url: Optional[str] = None
+    item_count: int = Field(default=0, ge=0)
+    last_ingested_at: Optional[str] = None
+
+
+class SourceIngestRequest(BaseModel):
+    item_count_delta: int = Field(default=1, ge=0)
+    status: SourceStatus = "ready"
     last_ingested_at: Optional[str] = None
 
 

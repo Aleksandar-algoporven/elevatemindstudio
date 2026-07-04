@@ -1,4 +1,7 @@
 from typing import Optional
+from datetime import datetime, timezone
+import re
+from uuid import uuid4
 
 from fastapi import HTTPException
 import httpx
@@ -10,8 +13,11 @@ from app.models import (
     Brand,
     ChannelConnection,
     ContentDraft,
+    ContentDraftCreate,
     InboxMessage,
     SourceItem,
+    SourceIngestRequest,
+    SourceUpsertRequest,
 )
 from app.settings import settings
 
@@ -252,6 +258,39 @@ def _supabase_insert(table: str, payload: dict) -> bool:
         return False
 
 
+def _supabase_upsert(table: str, payload: dict) -> Optional[dict]:
+    if not settings.database_configured:
+        return None
+
+    try:
+        with httpx.Client(timeout=SUPABASE_TIMEOUT_SECONDS) as client:
+            response = client.post(
+                _supabase_url(table),
+                headers={
+                    **_supabase_headers(),
+                    "Prefer": "resolution=merge-duplicates,return=representation",
+                },
+                json=payload,
+            )
+            response.raise_for_status()
+            rows = response.json()
+            if isinstance(rows, list) and rows:
+                return rows[0]
+    except httpx.HTTPError:
+        return None
+    return None
+
+
+def _slug_id(prefix: str, value: str) -> str:
+    slug = re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")
+    slug = slug[:48] or "item"
+    return f"{prefix}-{slug}-{uuid4().hex[:8]}"
+
+
+def _now_iso() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
 def active_brand() -> Brand:
     rows = _supabase_get("brands", {"limit": "1"})
     if rows:
@@ -287,6 +326,46 @@ def list_sources() -> list[SourceItem]:
     return sources
 
 
+def upsert_source(request: SourceUpsertRequest) -> SourceItem:
+    payload = request.model_dump()
+    payload["id"] = request.id or _slug_id("source", request.name)
+    row = _supabase_upsert("content_sources", payload)
+    if row:
+        return SourceItem.model_validate(row)
+
+    source = SourceItem.model_validate(payload)
+    for index, existing in enumerate(sources):
+        if existing.id == source.id:
+            sources[index] = source
+            return source
+    sources.append(source)
+    return source
+
+
+def mark_source_ingested(source_id: str, request: SourceIngestRequest) -> SourceItem:
+    source = None
+    for item in list_sources():
+        if item.id == source_id:
+            source = item
+            break
+    if source is None:
+        raise HTTPException(status_code=404, detail="Source not found")
+
+    payload = {
+        "status": request.status,
+        "item_count": source.item_count + request.item_count_delta,
+        "last_ingested_at": request.last_ingested_at or _now_iso(),
+    }
+    _supabase_patch("content_sources", source.id, payload)
+    updated = source.model_copy(update=payload)
+
+    for index, existing in enumerate(sources):
+        if existing.id == source.id:
+            sources[index] = updated
+            break
+    return updated
+
+
 def list_inbox_messages() -> list[InboxMessage]:
     rows = _supabase_get("inbox_messages", {"order": "created_at.desc"})
     if rows:
@@ -299,6 +378,22 @@ def find_draft(draft_id: str) -> ContentDraft:
         if draft.id == draft_id:
             return draft
     raise HTTPException(status_code=404, detail="Draft not found")
+
+
+def create_draft(request: ContentDraftCreate) -> ContentDraft:
+    payload = request.model_dump()
+    payload["id"] = request.id or _slug_id("draft", request.title)
+    row = _supabase_upsert("content_drafts", payload)
+    if row:
+        return ContentDraft.model_validate(row)
+
+    draft = ContentDraft.model_validate(payload)
+    for index, existing in enumerate(drafts):
+        if existing.id == draft.id:
+            drafts[index] = draft
+            return draft
+    drafts.append(draft)
+    return draft
 
 
 def next_approval_state(decision: ApprovalDecision) -> str:
