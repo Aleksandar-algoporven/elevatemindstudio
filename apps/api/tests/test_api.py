@@ -1,8 +1,8 @@
 from fastapi.testclient import TestClient
-from app.routers import approvals, integrations
+from app.routers import approvals, drafts, integrations
 
 from app.main import app
-from app.models import BufferChannel, BufferPublishRequest, BufferPublishResult, BufferPublishTarget, BufferStatus
+from app.models import BufferChannel, BufferPublishRequest, BufferPublishResult, BufferPublishTarget, BufferStatus, GeneratedDraft
 from app.services.buffer_client import BufferClient
 from app.services.discord_client import DiscordClient
 from app.services.linkedin_client import LinkedInClient
@@ -87,6 +87,37 @@ def test_create_draft() -> None:
     assert payload["id"] == draft_id
     assert payload["approval_state"] == "draft"
     assert payload["source_refs"] == ["API notes for content testing"]
+
+
+def test_generate_and_save_draft(monkeypatch) -> None:
+    def fake_generate(request):
+        return GeneratedDraft(
+            title="Generated trust post",
+            channel=request.channel,
+            pillar=request.pillar,
+            copy_text="Generated source-backed copy for review.",
+            asset_brief="Simple product evidence card.",
+            risk_level="low",
+            review_notes=["Human approval required."],
+        )
+
+    monkeypatch.setattr(drafts, "generate_draft", fake_generate)
+
+    response = client.post(
+        "/drafts/generate/save",
+        json={
+            "brand_name": "AlgoProven",
+            "pillar": "Trust",
+            "channel": "linkedin",
+            "source_summary": "Source backed product update with approval workflow.",
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["title"] == "Generated trust post"
+    assert payload["approval_state"] == "needs_review"
+    assert payload["source_refs"] == ["Source backed product update with approval workflow."]
 
 
 def test_buffer_status_route() -> None:

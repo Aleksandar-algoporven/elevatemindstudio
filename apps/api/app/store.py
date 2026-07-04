@@ -396,6 +396,16 @@ def create_draft(request: ContentDraftCreate) -> ContentDraft:
     return draft
 
 
+def create_draft_from_generated(request: ContentDraftCreate, source_summary: str) -> ContentDraft:
+    draft_request = request.model_copy(
+        update={
+            "approval_state": "needs_review",
+            "source_refs": request.source_refs or [source_summary[:140]],
+        }
+    )
+    return create_draft(draft_request)
+
+
 def next_approval_state(decision: ApprovalDecision) -> str:
     if decision == "approve":
         return "approved"

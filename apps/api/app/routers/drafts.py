@@ -4,7 +4,7 @@ from fastapi import APIRouter
 
 from app.models import ContentDraft, ContentDraftCreate, DraftRequest, GeneratedDraft
 from app.services.anthropic_client import generate_draft
-from app.store import create_draft, list_drafts as get_drafts
+from app.store import create_draft, create_draft_from_generated, list_drafts as get_drafts
 
 router = APIRouter(prefix="/drafts", tags=["drafts"])
 
@@ -22,3 +22,18 @@ def add_draft(request: ContentDraftCreate) -> ContentDraft:
 @router.post("/generate", response_model=GeneratedDraft)
 def create_generated_draft(request: DraftRequest) -> GeneratedDraft:
     return generate_draft(request)
+
+
+@router.post("/generate/save", response_model=ContentDraft)
+def generate_and_save_draft(request: DraftRequest) -> ContentDraft:
+    generated = generate_draft(request)
+    return create_draft_from_generated(
+        ContentDraftCreate(
+            title=generated.title,
+            pillar=generated.pillar,
+            channel=generated.channel,
+            risk_level=generated.risk_level,
+            copy_text=generated.copy_text,
+        ),
+        request.source_summary,
+    )

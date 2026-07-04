@@ -59,6 +59,7 @@ Postojece backend rute:
 - `GET /drafts`
 - `POST /drafts`
 - `POST /drafts/generate`
+- `POST /drafts/generate/save`
 - `GET /calendar`
 - `GET /channels`
 - `GET /sources`
