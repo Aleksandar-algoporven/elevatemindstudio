@@ -1260,24 +1260,54 @@ a {
 .workspaceItem,
 .connectorRow,
 .sourceMatrix article,
-.channelStrip article {
+.channelStrip article,
+.inboxCard {
   border: 1px solid var(--line);
   border-radius: 8px;
   background: #fbfcfb;
 }
 
-.workspaceItem {
+.workspaceItem,
+.inboxCard {
   padding: 16px;
 }
 
-.workspaceItem h3 {
+.workspaceItem h3,
+.inboxCard h3 {
   font-size: 17px;
+  margin: 0;
 }
 
 .workspaceItem p,
+.inboxCard p,
 .panelNote {
   color: var(--muted);
   line-height: 1.55;
+}
+
+.inboxGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.inboxCard {
+  display: grid;
+  gap: 12px;
+}
+
+.inboxCard p {
+  margin: 0;
+}
+
+.inboxCard blockquote {
+  margin: 0;
+  padding: 12px 14px;
+  border-left: 3px solid #7bb49e;
+  border-radius: 8px;
+  background: #f2f7f4;
+  color: #33413f;
+  line-height: 1.5;
 }
 
 .itemMeta {
@@ -1373,6 +1403,22 @@ a {
   border-color: #b9decf;
   background: #eaf7f1;
   color: var(--green);
+}
+
+.singleActionForm {
+  display: grid;
+}
+
+.singleActionForm button {
+  min-height: 38px;
+  border: 1px solid #b9decf;
+  border-radius: 8px;
+  background: #eaf7f1;
+  color: var(--green);
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 850;
 }
 
 .status-approved,
@@ -2102,6 +2148,7 @@ a {
   .opsGrid,
   .publishPreview,
   .sourceMatrix,
+  .inboxGrid,
   .channelStrip,
   .gateGrid,
   .formGridTwo,

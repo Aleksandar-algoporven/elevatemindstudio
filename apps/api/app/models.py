@@ -297,6 +297,19 @@ class InboxMessage(BaseModel):
     needs_human: bool
 
 
+class InboxResolveRequest(BaseModel):
+    responder: str = "Aleksandar"
+    notes: str = ""
+
+
+class InboxResolveResult(BaseModel):
+    message_id: str
+    previous_needs_human: bool
+    next_needs_human: bool
+    responder: str
+    notes: str
+
+
 class DraftRequest(BaseModel):
     brand_name: str = "AlgoProven"
     pillar: str

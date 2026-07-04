@@ -16,6 +16,8 @@ from app.models import (
     ContentDraftCreate,
     DraftScheduleRequest,
     InboxMessage,
+    InboxResolveRequest,
+    InboxResolveResult,
     SourceItem,
     SourceIngestRequest,
     SourceUpsertRequest,
@@ -379,6 +381,34 @@ def list_inbox_messages() -> list[InboxMessage]:
     if rows:
         return [InboxMessage.model_validate(row) for row in rows]
     return inbox_messages
+
+
+def find_inbox_message(message_id: str) -> InboxMessage:
+    for message in list_inbox_messages():
+        if message.id == message_id:
+            return message
+    raise HTTPException(status_code=404, detail="Inbox message not found")
+
+
+def resolve_inbox_message(message_id: str, request: InboxResolveRequest) -> InboxResolveResult:
+    message = find_inbox_message(message_id)
+    previous_needs_human = message.needs_human
+    payload = {"needs_human": False}
+    _supabase_patch("inbox_messages", message.id, payload)
+    updated = message.model_copy(update=payload)
+
+    for index, existing in enumerate(inbox_messages):
+        if existing.id == message.id:
+            inbox_messages[index] = updated
+            break
+
+    return InboxResolveResult(
+        message_id=message.id,
+        previous_needs_human=previous_needs_human,
+        next_needs_human=False,
+        responder=request.responder,
+        notes=request.notes,
+    )
 
 
 def find_draft(draft_id: str) -> ContentDraft:

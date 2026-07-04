@@ -5,6 +5,7 @@ import {
   createWorkspaceSource,
   generateWorkspaceDraft,
   queueWorkspaceDraft,
+  resolveWorkspaceInboxMessage,
   reviewWorkspaceDraft,
   scheduleWorkspaceDraft
 } from "./actions";
@@ -76,6 +77,17 @@ type SourceItem = {
   item_count: number;
 };
 
+type InboxMessage = {
+  id: string;
+  channel: string;
+  author: string;
+  text: string;
+  priority: string;
+  sentiment: string;
+  suggested_reply: string;
+  needs_human: boolean;
+};
+
 type PublishPlan = {
   accepted: boolean;
   dry_run: boolean;
@@ -123,13 +135,14 @@ function summarizeIntegration(status: {
 }
 
 export default async function WorkspacePage() {
-  const [buffer, youtube, discord, linkedin, drafts, sources, publishPlan] = await Promise.all([
+  const [buffer, youtube, discord, linkedin, drafts, sources, inbox, publishPlan] = await Promise.all([
     fetchJson<BufferStatus>("/integrations/buffer/status"),
     fetchJson<YouTubeStatus>("/integrations/youtube/status"),
     fetchJson<DiscordStatus>("/integrations/discord/status"),
     fetchJson<LinkedInStatus>("/integrations/linkedin/status"),
     fetchJson<Draft[]>("/drafts"),
     fetchJson<SourceItem[]>("/sources"),
+    fetchJson<InboxMessage[]>("/inbox"),
     fetchJson<PublishPlan>("/integrations/buffer/publish", {
       method: "POST",
       body: JSON.stringify({
@@ -171,6 +184,8 @@ export default async function WorkspacePage() {
 
   const reviewDrafts = drafts || [];
   const sourceItems = sources || [];
+  const inboxItems = inbox || [];
+  const humanInboxItems = inboxItems.filter((message) => message.needs_human);
   const readyChannels = buffer?.channels.filter((channel) => channel.products.includes("publish")) || [];
   const approvedDrafts = reviewDrafts.filter((draft) => draft.approval_state === "approved");
   const reviewBlockedDrafts = reviewDrafts.filter((draft) => draft.approval_state !== "approved");
@@ -248,8 +263,8 @@ export default async function WorkspacePage() {
             <strong>{sourceItems.length}</strong>
           </article>
           <article>
-            <span>Publish dry-run</span>
-            <strong>{publishPlan?.accepted ? "Ready" : "Blocked"}</strong>
+            <span>Inbox needs human</span>
+            <strong>{humanInboxItems.length}</strong>
           </article>
         </section>
 
@@ -521,6 +536,41 @@ export default async function WorkspacePage() {
                 </article>
               ))}
             </div>
+          </div>
+        </section>
+
+        <section className="workspacePanel">
+          <div className="workspacePanelHeader">
+            <div>
+              <p className="eyebrow">Inbox triage</p>
+              <h2>Reply recommendations</h2>
+            </div>
+            <span className="smallBadge">{humanInboxItems.length} open</span>
+          </div>
+          <div className="inboxGrid">
+            {inboxItems.map((message) => (
+              <article className="inboxCard" key={message.id}>
+                <div className="itemTitleLine">
+                  <h3>{message.author}</h3>
+                  <span className={`statusChip connector-${message.needs_human ? "partial" : "connected"}`}>
+                    {message.needs_human ? "needs human" : "handled"}
+                  </span>
+                </div>
+                <p>{message.text}</p>
+                <blockquote>{message.suggested_reply}</blockquote>
+                <div className="itemMeta">
+                  <span>{message.channel}</span>
+                  <span>{message.priority}</span>
+                  <span>{message.sentiment}</span>
+                </div>
+                {message.needs_human ? (
+                  <form className="singleActionForm" action={resolveWorkspaceInboxMessage}>
+                    <input name="message_id" type="hidden" value={message.id} />
+                    <button type="submit">Mark handled</button>
+                  </form>
+                ) : null}
+              </article>
+            ))}
           </div>
         </section>
 

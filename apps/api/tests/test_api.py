@@ -154,6 +154,20 @@ def test_queue_draft_requires_approval() -> None:
     assert "approved" in payload["blockers"][0]
 
 
+def test_resolve_inbox_message() -> None:
+    response = client.post(
+        "/inbox/inbox-001/resolve",
+        json={"responder": "Test reviewer", "notes": "Handled in test."},
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["message_id"] == "inbox-001"
+    assert payload["previous_needs_human"] is True
+    assert payload["next_needs_human"] is False
+    assert payload["responder"] == "Test reviewer"
+
+
 def test_buffer_status_route() -> None:
     response = client.get("/integrations/buffer/status")
 

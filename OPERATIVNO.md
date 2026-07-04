@@ -67,6 +67,7 @@ Postojece backend rute:
 - `POST /sources`
 - `POST /sources/{source_id}/ingest`
 - `GET /inbox`
+- `POST /inbox/{message_id}/resolve`
 - `POST /approvals/drafts/{draft_id}`
 - `POST /approvals/drafts/{draft_id}/queue`
 - `POST /api/billing/webhook` na web app-u, za Stripe sandbox webhook ack

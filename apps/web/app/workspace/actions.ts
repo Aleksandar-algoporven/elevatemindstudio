@@ -100,3 +100,12 @@ export async function queueWorkspaceDraft(formData: FormData) {
 
   revalidatePath("/workspace");
 }
+
+export async function resolveWorkspaceInboxMessage(formData: FormData) {
+  await postJson(`/inbox/${value(formData, "message_id")}/resolve`, {
+    responder: "Aleksandar",
+    notes: "Handled from workspace triage."
+  });
+
+  revalidatePath("/workspace");
+}
