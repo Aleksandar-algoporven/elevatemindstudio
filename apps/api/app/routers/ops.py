@@ -16,6 +16,14 @@ def check(key: str, label: str, state: str, detail: str, action: str = "") -> Re
     return ReadinessCheck(key=key, label=label, state=state, detail=detail, action=action)  # type: ignore[arg-type]
 
 
+def connector_state(connected: bool, notes: list[str]) -> str:
+    if connected:
+        return "ready"
+    if any("HTTP 429" in note for note in notes):
+        return "watch"
+    return "blocked"
+
+
 @router.get("/readiness", response_model=ReadinessResponse)
 def readiness() -> ReadinessResponse:
     drafts = list_drafts()
@@ -59,11 +67,11 @@ def readiness() -> ReadinessResponse:
         check(
             "buffer",
             "Buffer publishing",
-            "ready" if buffer_status.connected and buffer_status.channels_count else "blocked",
+            "ready" if buffer_status.connected and buffer_status.channels_count else connector_state(False, buffer_status.notes),
             f"{buffer_status.channels_count} Buffer channels connected."
             if buffer_status.connected
             else "; ".join(buffer_status.notes[:2]) or "Buffer is not connected.",
-            "" if buffer_status.connected else "Connect Buffer channel/token.",
+            "" if buffer_status.connected else "Connect Buffer channel/token or wait for rate limit reset.",
         ),
         check(
             "discord",
