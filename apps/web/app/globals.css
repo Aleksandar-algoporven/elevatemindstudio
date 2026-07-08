@@ -367,8 +367,90 @@ img {
 
 .featureSection,
 .statusDesk,
-.campaignBackpage {
+.campaignBackpage,
+.requestSection {
   padding: 56px 0;
+}
+
+.requestSection {
+  border-bottom: 1px solid var(--line);
+  background:
+    linear-gradient(90deg, rgba(154, 113, 37, 0.08), rgba(255, 253, 248, 0.2)),
+    rgba(251, 248, 240, 0.64);
+}
+
+.requestGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(360px, 1fr);
+  gap: 44px;
+  align-items: start;
+}
+
+.requestGrid h2 {
+  margin: 16px 0 14px;
+  font-family: "Newsreader", Georgia, serif;
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 500;
+  line-height: 1.04;
+}
+
+.requestGrid p {
+  max-width: 560px;
+  color: var(--muted);
+  font-size: 16.5px;
+  line-height: 1.65;
+}
+
+.requestForm {
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  box-shadow: 0 14px 36px rgba(32, 26, 18, 0.07);
+}
+
+.requestForm label {
+  display: grid;
+  gap: 7px;
+}
+
+.requestForm label span {
+  color: var(--faint);
+  font-family: "Space Mono", monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.requestForm input,
+.requestForm textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fffdf8;
+  color: var(--ink);
+  padding: 12px;
+}
+
+.requestForm textarea {
+  resize: vertical;
+}
+
+.requestForm button {
+  justify-self: start;
+  min-height: 42px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--gold);
+  color: var(--paper);
+  padding: 0 18px;
+  font-family: "Space Mono", monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .featureSection blockquote {
@@ -1445,6 +1527,7 @@ img {
   .workflowGrid,
   .statusGrid,
   .campaignGrid,
+  .requestGrid,
   .boardLayout,
   .twoColumn {
     grid-template-columns: 1fr;

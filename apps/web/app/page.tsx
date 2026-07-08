@@ -62,6 +62,7 @@ export default function Home() {
             <a href="#platform">Platform</a>
             <a href="#workflow">Workflow</a>
             <a href="#campaign">Campaign</a>
+            <a href="#request-access">Request access</a>
             <Link href="/privacy">Privacy</Link>
             <Link href="/terms">Terms</Link>
             <Link className="navCta" href="/workspace">Open workspace</Link>
@@ -123,6 +124,49 @@ export default function Home() {
             <Link className="btnSolid" href="/workspace">Open workspace</Link>
             <a className="textLink" href="#workflow">View workflow</a>
           </div>
+        </div>
+      </section>
+
+      <section id="request-access" className="requestSection">
+        <div className="magazineWrap requestGrid">
+          <div>
+            <p className="sectionFolio">Private beta intake</p>
+            <h2>Request access to the operating room.</h2>
+            <p>
+              Tell us what brand you want to run through ElevateMindStudio and
+              which channels matter first. This keeps the early workspace focused
+              on real accounts, real approvals, and real publishing constraints.
+            </p>
+          </div>
+          <form
+            className="requestForm"
+            action="mailto:support@elevatemindstudio.net"
+            method="post"
+            encType="text/plain"
+          >
+            <label>
+              <span>Name</span>
+              <input name="name" type="text" placeholder="Aleksandar" required />
+            </label>
+            <label>
+              <span>Email</span>
+              <input name="email" type="email" placeholder="you@example.com" required />
+            </label>
+            <label>
+              <span>Brand / company</span>
+              <input name="brand" type="text" placeholder="AlgoProven" />
+            </label>
+            <label>
+              <span>What should the agent manage?</span>
+              <textarea
+                name="message"
+                placeholder="Channels, content sources, approval rules, and publishing goals."
+                rows={5}
+                required
+              />
+            </label>
+            <button type="submit">Send request</button>
+          </form>
         </div>
       </section>
 
