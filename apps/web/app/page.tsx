@@ -121,8 +121,18 @@ export default function Home() {
             the first live campaign is <b>AlgoProven</b>.
           </p>
           <div className="ledeActions">
-            <Link className="btnSolid" href="/workspace">Open workspace</Link>
-            <a className="textLink" href="#workflow">View workflow</a>
+            <form
+              className="quickRequestForm"
+              action="mailto:support@elevatemindstudio.net"
+              method="post"
+              encType="text/plain"
+            >
+              <span>Request access</span>
+              <input name="name" type="text" placeholder="Name" required />
+              <input name="email" type="email" placeholder="Email" required />
+              <button type="submit">Send request</button>
+            </form>
+            <Link className="textLink" href="/workspace">Open workspace</Link>
           </div>
         </div>
       </section>
