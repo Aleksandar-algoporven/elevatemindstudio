@@ -1,245 +1,261 @@
 import Image from "next/image";
 import Link from "next/link";
 
-const platformCards = [
+const platformFeatures = [
   {
-    number: "01",
+    label: "Feature 01",
     title: "Brand memory",
-    body: "Use approved sources, campaign notes, links, and decisions as the base layer for draft generation."
+    body: "Approved sources, decisions, campaign notes, links, and positioning stay attached to every generated draft."
   },
   {
-    number: "02",
+    label: "Feature 02",
     title: "Approval first",
-    body: "Keep review status visible before content is queued, posted, or handed to a scheduler."
+    body: "Every publish route keeps human review visible before content can reach a queue or scheduler."
   },
   {
-    number: "03",
+    label: "Feature 03",
     title: "Connector aware",
-    body: "Track which channels are ready, which are waiting for verification, and which are intentionally skipped."
+    body: "Channels are tracked as ready, waiting on verification, rate-limited, or intentionally skipped."
   }
 ];
 
-const workflowCards = [
+const workflowSteps = [
   {
-    number: "A",
+    marker: "A.",
     title: "Plan",
-    body: "Campaign, audience, offer, source links, and publishing intent are captured in one place."
+    body: "Capture the audience, offer, source links, campaign pillar, and publishing intent in one workspace."
   },
   {
-    number: "B",
+    marker: "B.",
     title: "Produce",
-    body: "AI drafts are generated against the approved context instead of loose prompts."
+    body: "Generate AI drafts against approved context, not loose prompts or disconnected notes."
   },
   {
-    number: "C",
+    marker: "C.",
     title: "Publish",
-    body: "Approved posts move through connector checks before real scheduling is enabled."
+    body: "Move approved posts through connector checks before real scheduling is enabled."
   }
 ];
 
-const signalCards = [
-  {
-    label: "Sources",
-    value: "Approved",
-    detail: "Campaign notes, links, and positioning stay attached to every draft."
-  },
-  {
-    label: "Review",
-    value: "Human gate",
-    detail: "Every publish route is visible before content reaches a channel."
-  },
-  {
-    label: "Bridge",
-    value: "Dry-run live",
-    detail: "Buffer is validating the path while direct APIs finish approvals."
-  }
-];
-
-const connectorCards = [
-  { name: "Buffer", state: "Live", tone: "green" },
-  { name: "YouTube", state: "OAuth ready", tone: "blue" },
-  { name: "LinkedIn", state: "Review pending", tone: "gold" },
-  { name: "Discord", state: "Verify pending", tone: "red" }
+const channelStatus = [
+  { name: "Buffer", state: "Live", tone: "ready" },
+  { name: "YouTube", state: "OAuth ready", tone: "neutral" },
+  { name: "LinkedIn", state: "Review pending", tone: "watch" },
+  { name: "Discord", state: "Verify pending", tone: "watch" }
 ];
 
 export default function Home() {
   return (
-    <main className="landingShell">
-      <header className="landingNav landingContainer">
-        <Link className="siteBrand" href="/" aria-label="ElevateMindStudio home">
-          <Image
-            className="siteBrandWordmark"
-            src="/brand/elevatemind-final/elevatemind-logo-horizontal-transparent.png"
-            alt="ElevateMindStudio"
-            width={1123}
-            height={310}
-            priority
-          />
-        </Link>
-        <nav aria-label="Primary navigation">
-          <a href="#platform">Platform</a>
-          <a href="#workflow">Workflow</a>
-          <Link href="/workspace">Workspace</Link>
-          <Link href="/privacy">Privacy</Link>
-          <Link href="/terms">Terms</Link>
-        </nav>
+    <main className="magazineShell">
+      <header className="magazineHeader">
+        <div className="magazineWrap navInner">
+          <Link className="brandLockup" href="/" aria-label="ElevateMindStudio home">
+            <Image
+              src="/brand/elevatemind-final/elevatemind-logo-horizontal-transparent.png"
+              alt="ElevateMindStudio"
+              width={1123}
+              height={310}
+              priority
+            />
+          </Link>
+          <nav aria-label="Primary navigation">
+            <a href="#platform">Platform</a>
+            <a href="#workflow">Workflow</a>
+            <a href="#campaign">Campaign</a>
+            <Link href="/privacy">Privacy</Link>
+            <Link href="/terms">Terms</Link>
+            <Link className="navCta" href="/workspace">Open workspace</Link>
+          </nav>
+        </div>
       </header>
 
-      <section className="landingHero landingContainer" aria-labelledby="hero-title">
-        <div className="landingCopy">
-          <p className="eyebrow">Social media operating system</p>
-          <h1 id="hero-title">Plan, review, and publish without losing the thread.</h1>
+      <section className="masthead magazineWrap" aria-labelledby="home-title">
+        <div className="folioLine">
+          <span>Issue 01 - The Operations Edition</span>
+          <span>Est. 2026 - Belgrade / Global</span>
+        </div>
+        <div className="inkRule" />
+        <div className="kickerLine">
+          <span>Social media operating system</span>
+          <span>Review before reach</span>
+        </div>
+
+        <div className="coverGrid">
+          <div className="coverCopy">
+            <p className="kicker">Private beta</p>
+            <h1 id="home-title">
+              Plan, <em>review</em>, and publish without losing the thread.
+            </h1>
+          </div>
+          <div className="coverArt" aria-label="ElevateMindStudio operating cover">
+            <Image
+              className="coverLogo"
+              src="/brand/elevatemind-final/elevatemind-logo-stacked-transparent.png"
+              alt=""
+              width={900}
+              height={900}
+              priority
+            />
+            <div className="coverColumn left">
+              <span>Sources</span>
+              <strong>16</strong>
+              <small>approved memory items</small>
+            </div>
+            <div className="coverColumn right">
+              <span>Review</span>
+              <strong>Human gate</strong>
+              <small>No auto-posting</small>
+            </div>
+            <div className="gateStamp">
+              <span>Human gate - on</span>
+              <strong>No auto-posting</strong>
+            </div>
+          </div>
+        </div>
+
+        <div className="ledeBar">
           <p>
             A control room for brand memory, AI-assisted drafts, human approval,
-            and connector-safe publishing. The platform is ElevateMindStudio; the
-            first live campaign is AlgoProven.
+            and connector-safe publishing. The platform is <strong>ElevateMindStudio</strong>;
+            the first live campaign is <b>AlgoProven</b>.
           </p>
-          <div className="heroActions" aria-label="Primary links">
-            <Link className="primaryLink" href="/workspace">Open workspace</Link>
-            <a className="secondaryLink" href="#workflow">View workflow</a>
-          </div>
-          <div className="heroSignalRow" aria-label="Production status">
-            <span>API live</span>
-            <span>Buffer dry-run</span>
-            <span>Legal pages ready</span>
-          </div>
-        </div>
-
-        <div className="heroScene" aria-hidden="true">
-          <div className="sceneTopline">
-            <span>AlgoProven campaign room</span>
-            <strong>Live MVP</strong>
-          </div>
-          <div className="sceneGrid">
-            <div className="scenePanel sourcePanel">
-              <span className="miniLabel">Brand memory</span>
-              <strong>Source-backed drafts</strong>
-              <div className="sceneLines">
-                <span />
-                <span />
-                <span />
-              </div>
-            </div>
-            <div className="scenePanel reviewPanel">
-              <span className="miniLabel">Approval lane</span>
-              <strong>Review before reach</strong>
-              <div className="sceneApproval">
-                <span>Draft</span>
-                <span>Approve</span>
-                <span>Queue</span>
-              </div>
-            </div>
-            <div className="scenePanel channelPanel">
-              <span className="miniLabel">Connectors</span>
-              <div className="sceneConnectors">
-                {connectorCards.map((connector) => (
-                  <span className={`sceneConnector ${connector.tone}`} key={connector.name}>
-                    <b>{connector.name}</b>
-                    <small>{connector.state}</small>
-                  </span>
-                ))}
-              </div>
-            </div>
-            <div className="scenePanel publishPanel">
-              <span className="miniLabel">Publish gates</span>
-              <strong>No auto-posting</strong>
-              <div className="gateRail">
-                <span />
-                <span />
-                <span />
-              </div>
-            </div>
+          <div className="ledeActions">
+            <Link className="btnSolid" href="/workspace">Open workspace</Link>
+            <a className="textLink" href="#workflow">View workflow</a>
           </div>
         </div>
       </section>
 
-      <section className="signalBand" aria-label="Operating signals">
-        <div className="landingContainer signalGrid">
-          {signalCards.map((signal) => (
-            <article className="signalCard" key={signal.label}>
-              <span>{signal.label}</span>
-              <strong>{signal.value}</strong>
-              <p>{signal.detail}</p>
+      <section id="platform" className="featureSection">
+        <div className="magazineWrap">
+          <p className="sectionFolio">Feature 01 - The platform</p>
+          <blockquote>
+            One operating layer between ideas, approvals, and publishing.
+          </blockquote>
+          <div className="editorialColumns">
+            <p>
+              <span>B</span>uilt around source-of-truth content, review state,
+              connector readiness, and a clear separation between the platform
+              and every managed brand campaign.
+            </p>
+            <p>
+              Brand memory comes first. Approved sources, campaign notes, links,
+              and decisions become the base layer for every draft the system
+              generates, so the AI works from owned context instead of guesswork.
+            </p>
+            <p>
+              Approval is never an afterthought. Review status stays visible
+              before content is queued, posted, or handed to a scheduler.
+            </p>
+          </div>
+
+          <div className="featureTriptych">
+            {platformFeatures.map((feature) => (
+              <article key={feature.title} className="featureTile">
+                <span>{feature.label}</span>
+                <div className="figureFrame">
+                  <i />
+                  <i />
+                  <i />
+                </div>
+                <h2>{feature.title}</h2>
+                <p>{feature.body}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="workflow" className="darkFeature">
+        <div className="magazineWrap workflowGrid">
+          <div>
+            <p className="sectionFolio">Feature 02 - The workflow</p>
+            <h2>Designed around review before reach.</h2>
+            <p>
+              The MVP connects the workspace to a production API, Buffer dry-run
+              validation, YouTube status, legal pages, and explicit publish gates.
+              LinkedIn and Discord stay staged until their verifications are approved.
+            </p>
+          </div>
+          <div className="workflowPanel" aria-label="Workflow status">
+            <span>Draft</span>
+            <span>Review</span>
+            <span>Queue</span>
+            <span>Dry-run</span>
+          </div>
+          <div className="workflowSteps">
+            {workflowSteps.map((step) => (
+              <article key={step.title}>
+                <strong>{step.marker}</strong>
+                <h3>{step.title}</h3>
+                <p>{step.body}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="statusDesk">
+        <div className="magazineWrap statusGrid">
+          <div>
+            <p className="sectionFolio">Status desk</p>
+            <h2>Where every channel stands today.</h2>
+            <p>
+              Buffer validates the publish path while direct APIs finish approvals.
+              Nothing is auto-posted.
+            </p>
+            <Link className="btnGold" href="/workspace">Open live workspace</Link>
+          </div>
+          <div className="channelTable">
+            {channelStatus.map((channel) => (
+              <div key={channel.name}>
+                <span>{channel.name}</span>
+                <strong className={`statusText ${channel.tone}`}>{channel.state}</strong>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="campaign" className="campaignBackpage">
+        <div className="magazineWrap campaignGrid">
+          <div>
+            <p className="sectionFolio">The last word - first campaign</p>
+            <h2>AlgoProven is the first managed brand inside the platform.</h2>
+          </div>
+          <div className="identityRows">
+            <article>
+              <span>Platform - ElevateMindStudio</span>
+              <p>Owns the product, API, workspace, legal pages, and integration layer.</p>
             </article>
-          ))}
-        </div>
-      </section>
-
-      <section id="platform" className="landingBand">
-        <div className="landingContainer">
-          <p className="eyebrow">Platform</p>
-          <h2>One operating layer between ideas, approvals, and publishing.</h2>
-          <p className="bandLead">
-            The system is built around source-of-truth content, review state,
-            connector readiness, and a clear separation between the platform and
-            every managed brand campaign.
-          </p>
-          <div className="landingCardGrid">
-            {platformCards.map((card) => (
-              <article className="landingCard" key={card.title}>
-                <span className="cardNumber">{card.number}</span>
-                <h3>{card.title}</h3>
-                <p>{card.body}</p>
-              </article>
-            ))}
+            <article>
+              <span>Campaign - AlgoProven</span>
+              <p>Owns the social channels, audience, content themes, and campaign output.</p>
+            </article>
           </div>
         </div>
       </section>
 
-      <section id="workflow" className="landingBand darkBand">
-        <div className="landingContainer">
-          <p className="eyebrow">Workflow</p>
-          <h2>Designed around review before reach.</h2>
-          <p className="bandLead">
-            The current MVP connects the workspace to a production API, Buffer
-            dry-run validation, YouTube status, legal pages, and explicit publish
-            gates. LinkedIn and Discord remain staged until their verifications are approved.
-          </p>
-          <div className="landingCardGrid">
-            {workflowCards.map((card) => (
-              <article className="landingCard" key={card.title}>
-                <span className="cardNumber">{card.number}</span>
-                <h3>{card.title}</h3>
-                <p>{card.body}</p>
-              </article>
-            ))}
+      <footer className="magazineFooter">
+        <div className="magazineWrap footerInner">
+          <div>
+            <Image
+              src="/brand/elevatemind-final/elevatemind-logo-horizontal-transparent.png"
+              alt="ElevateMindStudio"
+              width={1123}
+              height={310}
+            />
+            <p>
+              A private social media operations platform for planning, reviewing,
+              approving, and publishing brand content.
+            </p>
           </div>
-          <div className="heroActions">
-            <Link className="primaryLink invertedLink" href="/workspace">Open live workspace</Link>
-            <a className="secondaryLink mutedLink" href="https://api.elevatemindstudio.net/health">API health</a>
-          </div>
-        </div>
-      </section>
-
-      <section className="landingBand">
-        <div className="landingContainer">
-          <p className="eyebrow">First campaign</p>
-          <h2>AlgoProven is the first managed brand inside the platform.</h2>
-          <p className="bandLead">
-            ElevateMindStudio is the platform. AlgoProven is the first brand campaign.
-            That separation lets the system grow from one owned brand into a reusable
-            social media operations workspace.
-          </p>
-          <div className="identityGrid">
-            <div className="landingCard identityCard">
-              <h3>Platform identity</h3>
-              <p>ElevateMindStudio owns the product, API, workspace, legal pages, connectors, and approval model.</p>
-            </div>
-            <div className="landingCard identityCard">
-              <h3>Campaign identity</h3>
-              <p>AlgoProven owns the social channels, audience, content themes, and campaign output.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <footer className="siteFooter">
-        <span>(c) 2026 ElevateMindStudio</span>
-        <div>
-          <Link href="/workspace">Workspace</Link>
-          <Link href="/privacy">Privacy Policy</Link>
-          <Link href="/terms">Terms of Service</Link>
-          <a href="mailto:support@elevatemindstudio.net">Contact</a>
+          <nav aria-label="Footer navigation">
+            <Link href="/workspace">Workspace</Link>
+            <Link href="/privacy">Privacy</Link>
+            <Link href="/terms">Terms</Link>
+            <a href="mailto:support@elevatemindstudio.net">Contact</a>
+          </nav>
         </div>
       </footer>
     </main>

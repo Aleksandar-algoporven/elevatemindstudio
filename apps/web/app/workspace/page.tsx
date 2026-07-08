@@ -1,5 +1,5 @@
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 import {
   createWorkspaceDraft,
   createWorkspaceSource,
@@ -165,6 +165,33 @@ function summarizeIntegration(status: {
   };
 }
 
+function labelStatus(value: string) {
+  return value.replace(/_/g, " ");
+}
+
+function statusClass(value: string) {
+  return value.replace(/_/g, "-").toLowerCase();
+}
+
+function draftCard(draft: Draft) {
+  return (
+    <article className="draftCard" key={draft.id}>
+      <div className="draftCardTop">
+        <h3>{draft.title}</h3>
+        <span className={`statusChip status-${statusClass(draft.approval_state)}`}>
+          {labelStatus(draft.approval_state)}
+        </span>
+      </div>
+      <p>{draft.copy_text}</p>
+      <div className="draftMeta">
+        <span>{draft.channel}</span>
+        <span>{draft.risk_level} risk</span>
+        <span>{draft.scheduled_for || "unscheduled"}</span>
+      </div>
+    </article>
+  );
+}
+
 export default async function WorkspacePage() {
   const [
     brand,
@@ -201,6 +228,28 @@ export default async function WorkspacePage() {
     })
   ]);
 
+  const activeBrand = brand || {
+    id: "brand-algoproven",
+    name: "AlgoProven",
+    domain: "algoproven.com",
+    tone: "Precise, evidence-backed, product-led, and operator-aware.",
+    autonomy_level: 1,
+    prohibited_claims: []
+  };
+  const reviewDrafts = drafts || [];
+  const sourceItems = sources || [];
+  const inboxItems = inbox || [];
+  const readinessChecks = readiness?.checks || [];
+  const humanInboxItems = inboxItems.filter((message) => message.needs_human);
+  const readyChannels = buffer?.channels.filter((channel) => channel.products.includes("publish")) || [];
+  const approvedDrafts = reviewDrafts.filter((draft) => draft.approval_state === "approved");
+  const draftLane = reviewDrafts.filter((draft) =>
+    ["draft", "rejected", "request_changes", "changes_requested"].includes(draft.approval_state)
+  );
+  const queueLane = approvedDrafts;
+  const reviewLane = reviewDrafts.filter((draft) => !draftLane.includes(draft) && !queueLane.includes(draft));
+  const activeDraft = reviewLane[0] || draftLane[0] || queueLane[0] || reviewDrafts[0] || null;
+
   const integrations = [
     summarizeIntegration({
       name: "Buffer",
@@ -230,27 +279,11 @@ export default async function WorkspacePage() {
     })
   ];
 
-  const reviewDrafts = drafts || [];
-  const activeBrand = brand || {
-    id: "brand-algoproven",
-    name: "AlgoProven",
-    domain: "algoproven.com",
-    tone: "Precise, evidence-backed, product-led, and operator-aware.",
-    autonomy_level: 1,
-    prohibited_claims: []
-  };
-  const sourceItems = sources || [];
-  const inboxItems = inbox || [];
-  const readinessChecks = readiness?.checks || [];
-  const humanInboxItems = inboxItems.filter((message) => message.needs_human);
-  const readyChannels = buffer?.channels.filter((channel) => channel.products.includes("publish")) || [];
-  const approvedDrafts = reviewDrafts.filter((draft) => draft.approval_state === "approved");
-  const reviewBlockedDrafts = reviewDrafts.filter((draft) => draft.approval_state !== "approved");
   const publishGates = [
     {
       label: "Review gate",
-      value: `${reviewBlockedDrafts.length} open`,
-      state: reviewBlockedDrafts.length ? "partial" : "connected",
+      value: `${reviewDrafts.length - approvedDrafts.length} open`,
+      state: reviewDrafts.length === approvedDrafts.length ? "connected" : "partial",
       detail: "Every draft needs explicit approval before queueing."
     },
     {
@@ -261,8 +294,8 @@ export default async function WorkspacePage() {
     },
     {
       label: "Buffer dry-run",
-      value: publishPlan?.accepted ? "Ready" : "Blocked",
-      state: publishPlan?.accepted ? "connected" : "blocked",
+      value: publishPlan?.accepted ? "Ready" : "Watch",
+      state: publishPlan?.accepted ? "connected" : "partial",
       detail: publishPlan?.notes?.[0] || "Dry-run status unavailable."
     },
     {
@@ -274,346 +307,308 @@ export default async function WorkspacePage() {
   ];
 
   return (
-    <main className="workspaceShell">
-      <aside className="workspaceRail">
-        <Link className="siteBrand workspaceBrand" href="/">
+    <main className="studioShell">
+      <header className="studioTopbar">
+        <Link className="brandLockup" href="/">
           <Image
-            className="siteBrandLogo"
-            src="/brand/elevatemind-final/elevatemind-icon-100x100-transparent.png"
-            alt=""
-            width={36}
-            height={36}
+            src="/brand/elevatemind-final/elevatemind-logo-horizontal-transparent.png"
+            alt="ElevateMindStudio"
+            width={1123}
+            height={310}
             priority
           />
-          <span>ElevateMindStudio</span>
         </Link>
-        <nav aria-label="Workspace sections">
-          <a href="#overview">Overview</a>
-          <a href="#inputs">Inputs</a>
-          <a href="#review">Review</a>
-          <a href="#connectors">Connectors</a>
-          <a href="#publish">Publish</a>
+        <div className="brandSwitch">
+          <span />
+          <strong>{activeBrand.name}</strong>
+          <small>{activeBrand.domain}</small>
+        </div>
+        <div className="studioSearch" aria-hidden="true">
+          <span>Search drafts, sources, connectors...</span>
+        </div>
+        <Link className="topbarLink" href="/">Public site</Link>
+        <span className="liveBadge">API live</span>
+      </header>
+
+      <div className="studioGrid">
+        <nav className="studioRail" aria-label="Workspace sections">
+          <a href="#board" title="Board" aria-label="Board">▤</a>
+          <a href="#sources" title="Sources" aria-label="Sources">✎</a>
+          <a href="#connectors" title="Connectors" aria-label="Connectors">⇄</a>
+          <a href="#campaigns" title="Campaigns" aria-label="Campaigns">◈</a>
+          <a href="#settings" title="Settings" aria-label="Settings">⚙</a>
         </nav>
-      </aside>
 
-      <section className="workspaceMain">
-        <header className="workspaceHeader" id="overview">
-          <div>
-            <p className="eyebrow">AlgoProven control room</p>
-            <h1>Build, review, publish.</h1>
-            <p>Source-backed social media operations for the first ElevateMindStudio brand workspace.</p>
-          </div>
-          <Link className="secondaryLink" href="/">Public Site</Link>
-        </header>
-
-        <section className="opsGrid" aria-label="Operating metrics">
-          <article>
-            <span>Brand</span>
-            <strong>{activeBrand.name}</strong>
-          </article>
-          <article>
-            <span>Drafts</span>
-            <strong>{reviewDrafts.length}</strong>
-          </article>
-          <article>
-            <span>Sources</span>
-            <strong>{sourceItems.length}</strong>
-          </article>
-          <article>
-            <span>Inbox needs human</span>
-            <strong>{humanInboxItems.length}</strong>
-          </article>
-        </section>
-
-        <section className="workspacePanel">
-          <div className="workspacePanelHeader">
-            <div>
-              <p className="eyebrow">Brand guardrails</p>
-              <h2>Voice, autonomy, claims</h2>
-            </div>
-            <span className="smallBadge">Level {activeBrand.autonomy_level}</span>
-          </div>
-          <form className="workspaceForm" action={updateWorkspaceBrand}>
-            <div className="formGridFour">
-              <label>
-                <span>Name</span>
-                <input name="name" type="text" defaultValue={activeBrand.name} required minLength={2} />
-              </label>
-              <label>
-                <span>Domain</span>
-                <input name="domain" type="text" defaultValue={activeBrand.domain} required minLength={2} />
-              </label>
-              <label>
-                <span>Autonomy</span>
-                <select name="autonomy_level" defaultValue={String(activeBrand.autonomy_level)}>
-                  <option value="0">0 - manual only</option>
-                  <option value="1">1 - approval required</option>
-                  <option value="2">2 - low risk allowed</option>
-                  <option value="3">3 - scheduled automation</option>
-                  <option value="4">4 - full automation</option>
-                </select>
-              </label>
-              <label>
-                <span>Claims</span>
-                <input value={`${activeBrand.prohibited_claims.length} blocked`} readOnly />
-              </label>
-            </div>
-            <label>
-              <span>Tone</span>
-              <textarea name="tone" defaultValue={activeBrand.tone} required minLength={5} rows={3} />
-            </label>
-            <label>
-              <span>Prohibited claims</span>
-              <textarea
-                name="prohibited_claims"
-                defaultValue={activeBrand.prohibited_claims.join("\n")}
-                rows={4}
-              />
-            </label>
-            <button className="primaryLink formButton" type="submit">Save guardrails</button>
-          </form>
-        </section>
-
-        <section className="workspacePanel">
-          <div className="workspacePanelHeader">
-            <div>
-              <p className="eyebrow">System readiness</p>
-              <h2>Operational checklist</h2>
-            </div>
-            <span className="smallBadge">
-              {readiness?.ready ?? 0} ready / {readiness?.blocked ?? 0} blocked
-            </span>
-          </div>
-          <div className="readinessGrid">
-            {readinessChecks.map((item) => (
-              <article className="readinessCard" key={item.key}>
-                <div className="itemTitleLine">
-                  <strong>{item.label}</strong>
-                  <span className={`statusChip connector-${item.state === "ready" ? "connected" : item.state === "watch" ? "partial" : "blocked"}`}>
-                    {item.state}
-                  </span>
+        <section className="studioContent">
+          <section id="board" className="boardLayout">
+            <div className="boardMain">
+              <div className="viewHead">
+                <div>
+                  <p className="sectionFolio">Campaign board</p>
+                  <h1>{activeBrand.name} - Review lane</h1>
+                  <span>Nothing publishes without a human gate.</span>
                 </div>
-                <p>{item.detail}</p>
-                {item.action ? <span>{item.action}</span> : null}
-              </article>
-            ))}
-          </div>
-        </section>
+                <div className="headActions">
+                  <span className="smallBadge">Drafts {reviewDrafts.length}</span>
+                  <span className="smallBadge">Sources {sourceItems.length}</span>
+                  <span className="smallBadge">Inbox {humanInboxItems.length}</span>
+                </div>
+              </div>
 
-        <section className="workspaceGrid" id="inputs">
-          <div className="workspacePanel">
-            <div className="workspacePanelHeader">
-              <div>
-                <p className="eyebrow">Source intake</p>
-                <h2>Add content source</h2>
-              </div>
-            </div>
-            <form className="workspaceForm" action={createWorkspaceSource}>
-              <label>
-                <span>Name</span>
-                <input name="name" type="text" placeholder="Founder notes" required minLength={2} />
-              </label>
-              <div className="formGridTwo">
-                <label>
-                  <span>Type</span>
-                  <select name="source_type" defaultValue="manual">
-                    <option value="manual">Manual</option>
-                    <option value="website">Website</option>
-                    <option value="blog">Blog</option>
-                    <option value="repo">Repository</option>
-                    <option value="document">Document</option>
-                    <option value="feed">Feed</option>
-                  </select>
-                </label>
-                <label>
-                  <span>Status</span>
-                  <select name="status" defaultValue="pending">
-                    <option value="pending">Pending</option>
-                    <option value="manual">Manual</option>
-                    <option value="syncing">Syncing</option>
-                    <option value="ready">Ready</option>
-                  </select>
-                </label>
-              </div>
-              <label>
-                <span>URL</span>
-                <input name="url" type="url" placeholder="https://example.com/source" />
-              </label>
-              <label>
-                <span>Items</span>
-                <input name="item_count" type="number" min={0} defaultValue={0} />
-              </label>
-              <button className="primaryLink formButton" type="submit">Add source</button>
-            </form>
-          </div>
-
-          <div className="workspacePanel">
-            <div className="workspacePanelHeader">
-              <div>
-                <p className="eyebrow">Draft composer</p>
-                <h2>Create review draft</h2>
-              </div>
-            </div>
-            <form className="workspaceForm" action={createWorkspaceDraft}>
-              <label>
-                <span>Title</span>
-                <input name="title" type="text" placeholder="Weekly product proof" required minLength={2} />
-              </label>
-              <div className="formGridTwo">
-                <label>
-                  <span>Pillar</span>
-                  <input name="pillar" type="text" placeholder="Trust" required minLength={2} />
-                </label>
-                <label>
-                  <span>Channel</span>
-                  <select name="channel" defaultValue="linkedin">
-                    <option value="linkedin">LinkedIn</option>
-                    <option value="x">X</option>
-                    <option value="instagram">Instagram</option>
-                    <option value="youtube">YouTube</option>
-                    <option value="discord">Discord</option>
-                    <option value="reddit">Reddit</option>
-                    <option value="substack">Substack</option>
-                    <option value="bluesky">Bluesky</option>
-                  </select>
-                </label>
-              </div>
-              <div className="formGridTwo">
-                <label>
-                  <span>Risk</span>
-                  <select name="risk_level" defaultValue="low">
-                    <option value="low">Low</option>
-                    <option value="medium">Medium</option>
-                    <option value="high">High</option>
-                  </select>
-                </label>
-                <label>
-                  <span>Schedule</span>
-                  <input name="scheduled_for" type="datetime-local" />
-                </label>
-              </div>
-              <label>
-                <span>Sources</span>
-                <input name="source_refs" type="text" placeholder="Founder notes, changelog" />
-              </label>
-              <label>
-                <span>Copy</span>
-                <textarea name="copy_text" placeholder="Draft copy..." required minLength={1} rows={6} />
-              </label>
-              <button className="primaryLink formButton" type="submit">Create draft</button>
-            </form>
-          </div>
-        </section>
-
-        <section className="workspacePanel">
-          <div className="workspacePanelHeader">
-            <div>
-              <p className="eyebrow">Claude generation</p>
-              <h2>Generate from source context</h2>
-            </div>
-            <span className="smallBadge">Review first</span>
-          </div>
-          <form className="workspaceForm aiDraftForm" action={generateWorkspaceDraft}>
-            <div className="formGridFour">
-              <label>
-                <span>Brand</span>
-                <input name="brand_name" type="text" defaultValue="AlgoProven" required />
-              </label>
-              <label>
-                <span>Pillar</span>
-                <input name="pillar" type="text" placeholder="Trust" required minLength={2} />
-              </label>
-              <label>
-                <span>Channel</span>
-                <select name="channel" defaultValue="linkedin">
-                  <option value="linkedin">LinkedIn</option>
-                  <option value="x">X</option>
-                  <option value="instagram">Instagram</option>
-                  <option value="youtube">YouTube</option>
-                  <option value="discord">Discord</option>
-                  <option value="reddit">Reddit</option>
-                  <option value="substack">Substack</option>
-                  <option value="bluesky">Bluesky</option>
-                </select>
-              </label>
-              <label>
-                <span>Goal</span>
-                <input name="goal" type="text" defaultValue="Generate a review-ready social post." />
-              </label>
-            </div>
-            <label>
-              <span>Source context</span>
-              <textarea
-                name="source_summary"
-                placeholder="Paste changelog notes, blog paragraph, product update, meeting note, or source-backed idea."
-                required
-                minLength={10}
-                rows={5}
-              />
-            </label>
-            <button className="primaryLink formButton" type="submit">Generate review draft</button>
-          </form>
-        </section>
-
-        <section className="workspaceGrid">
-          <div className="workspacePanel largePanel" id="review">
-            <div className="workspacePanelHeader">
-              <div>
-                <p className="eyebrow">Review queue</p>
-                <h2>Drafts before reach</h2>
-              </div>
-              <span className="smallBadge">Autonomy 1</span>
-            </div>
-            <div className="workspaceList">
-              {reviewDrafts.map((draft) => (
-                <article className="workspaceItem" key={draft.id}>
-                  <div className="itemTitleLine">
-                    <h3>{draft.title}</h3>
-                    <span className={`statusChip status-${draft.approval_state.replace("_", "-")}`}>
-                      {draft.approval_state.replace("_", " ")}
-                    </span>
+              <div className="boardColumns">
+                <div className="boardColumn">
+                  <div className="laneTitle">
+                    <span>Draft</span>
+                    <small>{draftLane.length}</small>
                   </div>
-                  <p>{draft.copy_text}</p>
-                  <div className="itemMeta">
-                    <span>{draft.channel}</span>
-                    <span>{draft.risk_level} risk</span>
-                    <span>{draft.scheduled_for || "unscheduled"}</span>
+                  {draftLane.length ? draftLane.map(draftCard) : <p className="emptyLane">No draft changes waiting.</p>}
+                </div>
+                <div className="boardColumn">
+                  <div className="laneTitle">
+                    <span>Review</span>
+                    <small>{reviewLane.length}</small>
+                  </div>
+                  {reviewLane.length ? reviewLane.map(draftCard) : <p className="emptyLane">No draft is waiting for review.</p>}
+                </div>
+                <div className="boardColumn">
+                  <div className="laneTitle">
+                    <span>Queue</span>
+                    <small>{queueLane.length}</small>
+                  </div>
+                  {queueLane.length ? queueLane.map(draftCard) : <p className="emptyLane">Approved posts will appear here.</p>}
+                </div>
+              </div>
+            </div>
+
+            <aside className="inspectorPanel">
+              <div className="inspectorTop">
+                <span className="sectionFolio">Draft inspector</span>
+                <small>{activeDraft ? `#${activeDraft.id.slice(0, 6)}` : "empty"}</small>
+              </div>
+              {activeDraft ? (
+                <>
+                  <h2>{activeDraft.title}</h2>
+                  <p>{activeDraft.copy_text}</p>
+                  <div className="inspectorChips">
+                    <span>{activeDraft.channel}</span>
+                    <span>{activeDraft.risk_level} risk</span>
+                    <span>{labelStatus(activeDraft.approval_state)}</span>
+                  </div>
+                  <div className="pipelineNodes">
+                    <span>Draft</span>
+                    <span>Review</span>
+                    <span>Queue</span>
+                  </div>
+                  <div className="publishGate">
+                    <Image
+                      src="/brand/elevatemind-final/elevatemind-icon-transparent.png"
+                      alt=""
+                      width={220}
+                      height={220}
+                    />
+                    <span>Human gate - on</span>
+                    <strong>No auto-posting</strong>
+                    <small>Manual approval remains required.</small>
                   </div>
                   <form className="approvalControls" action={reviewWorkspaceDraft}>
-                    <input name="draft_id" type="hidden" value={draft.id} />
+                    <input name="draft_id" type="hidden" value={activeDraft.id} />
                     <button name="decision" value="approve" type="submit">Approve</button>
                     <button name="decision" value="request_changes" type="submit">Changes</button>
                     <button name="decision" value="reject" type="submit">Reject</button>
                   </form>
                   <div className="scheduleControls">
                     <form action={scheduleWorkspaceDraft}>
-                      <input name="draft_id" type="hidden" value={draft.id} />
-                      <input
-                        aria-label={`Schedule ${draft.title}`}
-                        name="scheduled_for"
-                        type="datetime-local"
-                        required
-                      />
+                      <input name="draft_id" type="hidden" value={activeDraft.id} />
+                      <input aria-label={`Schedule ${activeDraft.title}`} name="scheduled_for" type="datetime-local" required />
                       <button type="submit">Schedule</button>
                     </form>
                     <form action={queueWorkspaceDraft}>
-                      <input name="draft_id" type="hidden" value={draft.id} />
+                      <input name="draft_id" type="hidden" value={activeDraft.id} />
                       <button type="submit">Queue dry-run</button>
                     </form>
                   </div>
-                </article>
-              ))}
-            </div>
-          </div>
+                </>
+              ) : (
+                <p className="emptyLane">Create or generate a draft to activate the inspector.</p>
+              )}
+            </aside>
+          </section>
 
-          <aside className="workspacePanel" id="connectors">
-            <div className="workspacePanelHeader compact">
+          <section id="sources" className="workspaceSection">
+            <div className="sectionHeader">
               <div>
-                <p className="eyebrow">Connectors</p>
-                <h2>Live status</h2>
+                <p className="sectionFolio">Brand memory</p>
+                <h2>Sources and content intake</h2>
+              </div>
+              <span className="smallBadge">{sourceItems.length} inputs</span>
+            </div>
+            <div className="twoColumn">
+              <form className="studioForm" action={createWorkspaceSource}>
+                <label>
+                  <span>Name</span>
+                  <input name="name" type="text" placeholder="Founder notes" required minLength={2} />
+                </label>
+                <div className="formGridTwo">
+                  <label>
+                    <span>Type</span>
+                    <select name="source_type" defaultValue="manual">
+                      <option value="manual">Manual</option>
+                      <option value="website">Website</option>
+                      <option value="blog">Blog</option>
+                      <option value="repo">Repository</option>
+                      <option value="document">Document</option>
+                      <option value="feed">Feed</option>
+                    </select>
+                  </label>
+                  <label>
+                    <span>Status</span>
+                    <select name="status" defaultValue="pending">
+                      <option value="pending">Pending</option>
+                      <option value="manual">Manual</option>
+                      <option value="syncing">Syncing</option>
+                      <option value="ready">Ready</option>
+                    </select>
+                  </label>
+                </div>
+                <label>
+                  <span>URL</span>
+                  <input name="url" type="url" placeholder="https://example.com/source" />
+                </label>
+                <label>
+                  <span>Items</span>
+                  <input name="item_count" type="number" min={0} defaultValue={0} />
+                </label>
+                <button className="formButton" type="submit">Add source</button>
+              </form>
+
+              <div className="sourceStack">
+                {sourceItems.length ? (
+                  sourceItems.map((source) => (
+                    <article key={source.id} className="sourceRow">
+                      <strong>{source.name}</strong>
+                      <span>{source.source_type}</span>
+                      <small>{source.status} - {source.item_count} items</small>
+                    </article>
+                  ))
+                ) : (
+                  <p className="emptyLane">No sources yet. Add the first source for AI context.</p>
+                )}
               </div>
             </div>
-            <div className="connectorList">
+          </section>
+
+          <section className="workspaceSection">
+            <div className="sectionHeader">
+              <div>
+                <p className="sectionFolio">Production desk</p>
+                <h2>Create and generate drafts</h2>
+              </div>
+              <span className="smallBadge">Claude enabled</span>
+            </div>
+            <div className="twoColumn">
+              <form className="studioForm" action={createWorkspaceDraft}>
+                <label>
+                  <span>Title</span>
+                  <input name="title" type="text" placeholder="Weekly product proof" required minLength={2} />
+                </label>
+                <div className="formGridTwo">
+                  <label>
+                    <span>Pillar</span>
+                    <input name="pillar" type="text" placeholder="Trust" required minLength={2} />
+                  </label>
+                  <label>
+                    <span>Channel</span>
+                    <select name="channel" defaultValue="linkedin">
+                      <option value="linkedin">LinkedIn</option>
+                      <option value="x">X</option>
+                      <option value="instagram">Instagram</option>
+                      <option value="youtube">YouTube</option>
+                      <option value="discord">Discord</option>
+                      <option value="reddit">Reddit</option>
+                      <option value="substack">Substack</option>
+                      <option value="bluesky">Bluesky</option>
+                    </select>
+                  </label>
+                </div>
+                <div className="formGridTwo">
+                  <label>
+                    <span>Risk</span>
+                    <select name="risk_level" defaultValue="low">
+                      <option value="low">Low</option>
+                      <option value="medium">Medium</option>
+                      <option value="high">High</option>
+                    </select>
+                  </label>
+                  <label>
+                    <span>Schedule</span>
+                    <input name="scheduled_for" type="datetime-local" />
+                  </label>
+                </div>
+                <label>
+                  <span>Sources</span>
+                  <input name="source_refs" type="text" placeholder="Founder notes, changelog" />
+                </label>
+                <label>
+                  <span>Copy</span>
+                  <textarea name="copy_text" placeholder="Draft copy..." required minLength={1} rows={6} />
+                </label>
+                <button className="formButton" type="submit">Create draft</button>
+              </form>
+
+              <form className="studioForm aiForm" action={generateWorkspaceDraft}>
+                <div className="formGridTwo">
+                  <label>
+                    <span>Brand</span>
+                    <input name="brand_name" type="text" defaultValue={activeBrand.name} required />
+                  </label>
+                  <label>
+                    <span>Pillar</span>
+                    <input name="pillar" type="text" placeholder="Trust" required minLength={2} />
+                  </label>
+                </div>
+                <div className="formGridTwo">
+                  <label>
+                    <span>Channel</span>
+                    <select name="channel" defaultValue="linkedin">
+                      <option value="linkedin">LinkedIn</option>
+                      <option value="x">X</option>
+                      <option value="instagram">Instagram</option>
+                      <option value="youtube">YouTube</option>
+                      <option value="discord">Discord</option>
+                      <option value="reddit">Reddit</option>
+                      <option value="substack">Substack</option>
+                      <option value="bluesky">Bluesky</option>
+                    </select>
+                  </label>
+                  <label>
+                    <span>Goal</span>
+                    <input name="goal" type="text" defaultValue="Generate a review-ready social post." />
+                  </label>
+                </div>
+                <label>
+                  <span>Source context</span>
+                  <textarea
+                    name="source_summary"
+                    placeholder="Paste changelog notes, blog paragraph, product update, meeting note, or source-backed idea."
+                    required
+                    minLength={10}
+                    rows={9}
+                  />
+                </label>
+                <button className="formButton" type="submit">Generate review draft</button>
+              </form>
+            </div>
+          </section>
+
+          <section id="connectors" className="workspaceSection">
+            <div className="sectionHeader">
+              <div>
+                <p className="sectionFolio">Connectors</p>
+                <h2>Live status and readiness</h2>
+              </div>
+              <span className="smallBadge">{readiness?.ready ?? 0} ready / {readiness?.blocked ?? 0} blocked</span>
+            </div>
+            <div className="threeColumn">
               {integrations.map((integration) => (
                 <article className="connectorRow" key={integration.name}>
                   <div>
@@ -625,135 +620,152 @@ export default async function WorkspacePage() {
               ))}
             </div>
             <div className="connectorActions">
-              {linkedinAuth?.authorization_url ? (
-                <a href={linkedinAuth.authorization_url}>LinkedIn OAuth</a>
-              ) : null}
-              {youtubeAuth?.authorization_url ? (
-                <a href={youtubeAuth.authorization_url}>YouTube OAuth</a>
-              ) : null}
+              {linkedinAuth?.authorization_url ? <a href={linkedinAuth.authorization_url}>LinkedIn OAuth</a> : null}
+              {youtubeAuth?.authorization_url ? <a href={youtubeAuth.authorization_url}>YouTube OAuth</a> : null}
               <a href="https://api.elevatemindstudio.net/ops/readiness">Readiness JSON</a>
             </div>
-          </aside>
-        </section>
-
-        <section className="workspaceGrid">
-          <div className="workspacePanel" id="publish">
-            <div className="workspacePanelHeader">
-              <div>
-                <p className="eyebrow">Buffer dry-run</p>
-                <h2>Publish route validation</h2>
-              </div>
-            </div>
-            <div className="publishPreview">
-              <div>
-                <span>Target</span>
-                <strong>{publishPlan?.target?.display_name || "No target"}</strong>
-              </div>
-              <div>
-                <span>Service</span>
-                <strong>{publishPlan?.target?.service || "n/a"}</strong>
-              </div>
-              <div>
-                <span>Status</span>
-                <strong>{publishPlan?.accepted ? "Accepted" : "Blocked"}</strong>
-              </div>
-            </div>
-            <p className="panelNote">{publishPlan?.notes?.[0] || "Dry-run status unavailable."}</p>
-          </div>
-
-          <div className="workspacePanel">
-            <div className="workspacePanelHeader">
-              <div>
-                <p className="eyebrow">Source memory</p>
-                <h2>Inputs in use</h2>
-              </div>
-            </div>
-            <div className="sourceMatrix">
-              {sourceItems.map((source) => (
-                <article key={source.id}>
-                  <strong>{source.name}</strong>
-                  <span>{source.source_type}</span>
-                  <span>{source.status} - {source.item_count} items</span>
+            <div className="readinessGrid">
+              {readinessChecks.map((item) => (
+                <article className="readinessCard" key={item.key}>
+                  <div>
+                    <strong>{item.label}</strong>
+                    <span className={`statusChip connector-${item.state === "ready" ? "connected" : item.state === "watch" ? "partial" : "blocked"}`}>
+                      {item.state}
+                    </span>
+                  </div>
+                  <p>{item.detail}</p>
+                  {item.action ? <small>{item.action}</small> : null}
                 </article>
               ))}
             </div>
-          </div>
-        </section>
+          </section>
 
-        <section className="workspacePanel">
-          <div className="workspacePanelHeader">
-            <div>
-              <p className="eyebrow">Inbox triage</p>
-              <h2>Reply recommendations</h2>
+          <section id="campaigns" className="workspaceSection">
+            <div className="sectionHeader">
+              <div>
+                <p className="sectionFolio">Inbox and publish gates</p>
+                <h2>Monitoring before reach</h2>
+              </div>
+              <span className="smallBadge">{humanInboxItems.length} open replies</span>
             </div>
-            <span className="smallBadge">{humanInboxItems.length} open</span>
-          </div>
-          <div className="inboxGrid">
-            {inboxItems.map((message) => (
-              <article className="inboxCard" key={message.id}>
-                <div className="itemTitleLine">
-                  <h3>{message.author}</h3>
-                  <span className={`statusChip connector-${message.needs_human ? "partial" : "connected"}`}>
-                    {message.needs_human ? "needs human" : "handled"}
-                  </span>
-                </div>
-                <p>{message.text}</p>
-                <blockquote>{message.suggested_reply}</blockquote>
-                <div className="itemMeta">
-                  <span>{message.channel}</span>
-                  <span>{message.priority}</span>
-                  <span>{message.sentiment}</span>
-                </div>
-                {message.needs_human ? (
-                  <form className="singleActionForm" action={resolveWorkspaceInboxMessage}>
-                    <input name="message_id" type="hidden" value={message.id} />
-                    <button type="submit">Mark handled</button>
-                  </form>
-                ) : null}
-              </article>
-            ))}
-          </div>
-        </section>
+            <div className="twoColumn">
+              <div className="inboxStack">
+                {inboxItems.length ? (
+                  inboxItems.map((message) => (
+                    <article className="inboxCard" key={message.id}>
+                      <div className="draftCardTop">
+                        <h3>{message.author}</h3>
+                        <span className={`statusChip connector-${message.needs_human ? "partial" : "connected"}`}>
+                          {message.needs_human ? "needs human" : "handled"}
+                        </span>
+                      </div>
+                      <p>{message.text}</p>
+                      <blockquote>{message.suggested_reply}</blockquote>
+                      <div className="draftMeta">
+                        <span>{message.channel}</span>
+                        <span>{message.priority}</span>
+                        <span>{message.sentiment}</span>
+                      </div>
+                      {message.needs_human ? (
+                        <form className="singleActionForm" action={resolveWorkspaceInboxMessage}>
+                          <input name="message_id" type="hidden" value={message.id} />
+                          <button type="submit">Mark handled</button>
+                        </form>
+                      ) : null}
+                    </article>
+                  ))
+                ) : (
+                  <p className="emptyLane">No inbox messages are waiting.</p>
+                )}
+              </div>
 
-        <section className="workspacePanel">
-          <div className="workspacePanelHeader">
-            <div>
-              <p className="eyebrow">Publish gates</p>
-              <h2>Approval to Buffer path</h2>
+              <div className="gateGrid">
+                {publishGates.map((gate) => (
+                  <article className="gateCard" key={gate.label}>
+                    <div>
+                      <span>{gate.label}</span>
+                      <strong>{gate.value}</strong>
+                    </div>
+                    <p>{gate.detail}</p>
+                    <span className={`statusChip connector-${gate.state}`}>{gate.state}</span>
+                  </article>
+                ))}
+              </div>
             </div>
-            <span className="smallBadge">No auto-posting</span>
-          </div>
-          <div className="gateGrid">
-            {publishGates.map((gate) => (
-              <article className="gateCard" key={gate.label}>
-                <div>
-                  <span>{gate.label}</span>
-                  <strong>{gate.value}</strong>
-                </div>
-                <p>{gate.detail}</p>
-                <span className={`statusChip connector-${gate.state}`}>{gate.state}</span>
-              </article>
-            ))}
-          </div>
-        </section>
+          </section>
 
-        <section className="workspacePanel">
-          <div className="workspacePanelHeader">
-            <div>
-              <p className="eyebrow">Publishing bridge</p>
-              <h2>Channels ready through Buffer</h2>
+          <section id="settings" className="workspaceSection">
+            <div className="sectionHeader">
+              <div>
+                <p className="sectionFolio">Settings</p>
+                <h2>Voice, autonomy, claims</h2>
+              </div>
+              <span className="smallBadge">Level {activeBrand.autonomy_level}</span>
             </div>
-          </div>
-          <div className="channelStrip">
-            {readyChannels.map((channel) => (
-              <article key={channel.id}>
-                <strong>{channel.display_name}</strong>
-                <span>{channel.service}</span>
-              </article>
-            ))}
-          </div>
+            <div className="twoColumn">
+              <form className="studioForm" action={updateWorkspaceBrand}>
+                <div className="formGridTwo">
+                  <label>
+                    <span>Name</span>
+                    <input name="name" type="text" defaultValue={activeBrand.name} required minLength={2} />
+                  </label>
+                  <label>
+                    <span>Domain</span>
+                    <input name="domain" type="text" defaultValue={activeBrand.domain} required minLength={2} />
+                  </label>
+                </div>
+                <label>
+                  <span>Autonomy</span>
+                  <select name="autonomy_level" defaultValue={String(activeBrand.autonomy_level)}>
+                    <option value="0">0 - manual only</option>
+                    <option value="1">1 - approval required</option>
+                    <option value="2">2 - low risk allowed</option>
+                    <option value="3">3 - scheduled automation</option>
+                    <option value="4">4 - full automation</option>
+                  </select>
+                </label>
+                <label>
+                  <span>Tone</span>
+                  <textarea name="tone" defaultValue={activeBrand.tone} required minLength={5} rows={4} />
+                </label>
+                <label>
+                  <span>Prohibited claims</span>
+                  <textarea name="prohibited_claims" defaultValue={activeBrand.prohibited_claims.join("\n")} rows={5} />
+                </label>
+                <button className="formButton" type="submit">Save guardrails</button>
+              </form>
+
+              <div className="channelStrip">
+                <div className="publishPreview">
+                  <div>
+                    <span>Target</span>
+                    <strong>{publishPlan?.target?.display_name || "No target"}</strong>
+                  </div>
+                  <div>
+                    <span>Service</span>
+                    <strong>{publishPlan?.target?.service || "n/a"}</strong>
+                  </div>
+                  <div>
+                    <span>Status</span>
+                    <strong>{publishPlan?.accepted ? "Accepted" : "Watch"}</strong>
+                  </div>
+                </div>
+                <p className="panelNote">{publishPlan?.notes?.[0] || "Dry-run status unavailable."}</p>
+                {readyChannels.length ? (
+                  readyChannels.map((channel) => (
+                    <article key={channel.id}>
+                      <strong>{channel.display_name}</strong>
+                      <span>{channel.service}</span>
+                    </article>
+                  ))
+                ) : (
+                  <p className="emptyLane">No publish-ready channels returned by Buffer yet.</p>
+                )}
+              </div>
+            </div>
+          </section>
         </section>
-      </section>
+      </div>
     </main>
   );
 }
