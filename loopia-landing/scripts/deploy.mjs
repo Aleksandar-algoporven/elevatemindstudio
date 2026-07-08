@@ -34,8 +34,6 @@ try {
   console.log(`Connected to ${host}`);
   await client.ensureDir(remote);
   await client.cd(remote);
-  console.log(`Clearing ${remote}`);
-  await client.clearWorkingDir();
   console.log(`Uploading ${dist} -> ${remote}`);
   await client.uploadFromDir(dist, remote);
   const list = await client.list(remote);
