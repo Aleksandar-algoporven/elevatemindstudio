@@ -9,203 +9,105 @@
     <link rel="stylesheet" href="/assets/site.css">
   </head>
   <body>
-    <main class="magazineShell">
-      <header class="magazineHeader">
-        <div class="magazineWrap navInner">
-          <a class="brandLockup" href="/" aria-label="ElevateMindStudio home">
-            <img src="/assets/elevatemind-logo-horizontal-transparent.png" alt="ElevateMindStudio" width="1123" height="310">
-          </a>
-          <nav aria-label="Primary navigation">
-            <a href="#platform">Platform</a>
-            <a href="#workflow">Workflow</a>
-            <a href="#campaign">Campaign</a>
-            <a href="/privacy/">Privacy</a>
-            <a href="/terms/">Terms</a>
-            <a class="navCta" href="https://app.elevatemindstudio.net/workspace">Open workspace</a>
-          </nav>
-        </div>
+    <main class="publicStableShell">
+      <header class="stableNav">
+        <a class="stableBrand" href="/" aria-label="ElevateMindStudio home">
+          <img src="/assets/elevatemind-logo-horizontal-transparent.png" alt="ElevateMindStudio" width="1123" height="310">
+        </a>
+        <nav aria-label="Primary navigation">
+          <a href="#platform">Platform</a>
+          <a href="#workflow">Workflow</a>
+          <a href="/privacy/">Privacy</a>
+          <a href="/terms/">Terms</a>
+          <a class="stableNavCta" href="https://app.elevatemindstudio.net/workspace">Open workspace</a>
+        </nav>
       </header>
 
-      <section class="masthead magazineWrap" aria-labelledby="home-title">
-        <div class="folioLine">
-          <span>Issue 01 - The Operations Edition</span>
-          <span>Est. 2026 - Belgrade / Global</span>
-        </div>
-        <div class="inkRule"></div>
-        <div class="kickerLine">
-          <span>Social media operating system</span>
-          <span>Review before reach</span>
-        </div>
-
-        <div class="coverGrid">
-          <div class="coverCopy">
-            <p class="kicker">Private beta</p>
-            <h1 id="home-title">Plan, <em>review</em>, and publish without losing the thread.</h1>
-          </div>
-          <div class="coverArt" aria-label="ElevateMindStudio operating cover">
-            <img class="coverLogo" src="/assets/elevatemind-logo-stacked-transparent.png" alt="">
-            <div class="coverColumn left">
-              <span>Sources</span>
-              <strong>16</strong>
-              <small>approved memory items</small>
-            </div>
-            <div class="coverColumn right">
-              <span>Review</span>
-              <strong>Human gate</strong>
-              <small>No auto-posting</small>
-            </div>
-            <div class="gateStamp">
-              <span>Human gate - on</span>
-              <strong>No auto-posting</strong>
-            </div>
-          </div>
-        </div>
-
-        <div class="ledeBar">
+      <section class="stableHero">
+        <div class="stableHeroCopy">
+          <p class="stableKicker">Social media operating system</p>
+          <h1>Plan, review, and publish with one clear approval gate.</h1>
           <p>
-            A control room for brand memory, AI-assisted drafts, human approval,
-            and connector-safe publishing. The platform is <strong>ElevateMindStudio</strong>;
-            the first live campaign is <b>AlgoProven</b>.
+            ElevateMindStudio is a control room for brand memory, AI-assisted
+            drafts, human approval, and connector-safe publishing. AlgoProven is
+            the first live campaign.
           </p>
-          <div class="ledeActions">
-            <form
-              class="quickRequestForm"
-              action="mailto:support@elevatemindstudio.net"
-              method="post"
-              enctype="text/plain"
-            >
-              <span>Request access</span>
-              <input name="name" type="text" placeholder="Name" required>
-              <input name="email" type="email" placeholder="Email" required>
-              <input name="brand" type="text" placeholder="Brand / company">
-              <textarea
-                name="message"
-                placeholder="Channels, content sources, approval rules, and publishing goals."
-                rows="4"
-                required
-              ></textarea>
-              <button type="submit">Send request</button>
-            </form>
-            <a class="textLink" href="https://app.elevatemindstudio.net/workspace">Open workspace</a>
+          <div class="stableStatus">
+            <span><b>API</b>Live</span>
+            <span><b>Workspace</b>Ready</span>
+            <span><b>Publishing</b>Human gate</span>
           </div>
+        </div>
+
+        <aside class="stableFormCard" aria-label="Request access form">
+          <div class="stableFormHead">
+            <span>Private beta</span>
+            <strong>Request access</strong>
+          </div>
+          <form action="mailto:support@elevatemindstudio.net" method="post" enctype="text/plain">
+            <label>
+              <span>Name</span>
+              <input name="name" type="text" placeholder="Your name" required>
+            </label>
+            <label>
+              <span>Email</span>
+              <input name="email" type="email" placeholder="you@example.com" required>
+            </label>
+            <label>
+              <span>Brand / company</span>
+              <input name="brand" type="text" placeholder="AlgoProven">
+            </label>
+            <label>
+              <span>What should the agent manage?</span>
+              <textarea name="message" placeholder="Channels, sources, approvals, publishing goals..." rows="5" required></textarea>
+            </label>
+            <button type="submit">Send request</button>
+          </form>
+        </aside>
+      </section>
+
+      <section id="platform" class="stableBand">
+        <div>
+          <p class="stableKicker">Platform</p>
+          <h2>Built for source-backed content operations.</h2>
+        </div>
+        <div class="stableFeatureGrid">
+          <article>
+            <h3>Brand memory</h3>
+            <p>Store source material, campaign notes, positioning, and approved claims before AI drafts anything.</p>
+          </article>
+          <article>
+            <h3>Review workflow</h3>
+            <p>Drafts move through human approval before queueing or publishing, so nothing reaches a channel by accident.</p>
+          </article>
+          <article>
+            <h3>Connector readiness</h3>
+            <p>Track Buffer, YouTube, LinkedIn, Discord, and future channels from one operational view.</p>
+          </article>
         </div>
       </section>
 
-      <section id="platform" class="featureSection">
-        <div class="magazineWrap">
-          <p class="sectionFolio">Feature 01 - The platform</p>
-          <blockquote>One operating layer between ideas, approvals, and publishing.</blockquote>
-          <div class="editorialColumns">
-            <p><span>B</span>uilt around source-of-truth content, review state, connector readiness, and a clear separation between the platform and every managed brand campaign.</p>
-            <p>Brand memory comes first. Approved sources, campaign notes, links, and decisions become the base layer for every draft the system generates, so the AI works from owned context instead of guesswork.</p>
-            <p>Approval is never an afterthought. Review status stays visible before content is queued, posted, or handed to a scheduler.</p>
-          </div>
-
-          <div class="featureTriptych">
-            <article class="featureTile">
-              <span>Feature 01</span>
-              <div class="figureFrame"><i></i><i></i><i></i></div>
-              <h2>Brand memory</h2>
-              <p>Approved sources, decisions, campaign notes, links, and positioning stay attached to every generated draft.</p>
-            </article>
-            <article class="featureTile">
-              <span>Feature 02</span>
-              <div class="figureFrame"><i></i><i></i><i></i></div>
-              <h2>Approval first</h2>
-              <p>Every publish route keeps human review visible before content can reach a queue or scheduler.</p>
-            </article>
-            <article class="featureTile">
-              <span>Feature 03</span>
-              <div class="figureFrame"><i></i><i></i><i></i></div>
-              <h2>Connector aware</h2>
-              <p>Channels are tracked as ready, waiting on verification, rate-limited, or intentionally skipped.</p>
-            </article>
-          </div>
+      <section id="workflow" class="stableDarkBand">
+        <div>
+          <p class="stableKicker">Workflow</p>
+          <h2>Review before reach.</h2>
+          <p>
+            The workspace connects source intake, Claude draft generation,
+            review controls, Buffer dry-run validation, inbox triage, and
+            connector readiness into one operating surface.
+          </p>
+          <a href="https://app.elevatemindstudio.net/workspace">Open live workspace</a>
         </div>
       </section>
 
-      <section id="workflow" class="darkFeature">
-        <div class="magazineWrap workflowGrid">
-          <div>
-            <p class="sectionFolio">Feature 02 - The workflow</p>
-            <h2>Designed around review before reach.</h2>
-            <p>The MVP connects the workspace to a production API, Buffer dry-run validation, YouTube status, legal pages, and explicit publish gates. LinkedIn and Discord stay staged until their verifications are approved.</p>
-          </div>
-          <div class="workflowPanel" aria-label="Workflow status">
-            <span>Draft</span>
-            <span>Review</span>
-            <span>Queue</span>
-            <span>Dry-run</span>
-          </div>
-          <div class="workflowSteps">
-            <article>
-              <strong>A.</strong>
-              <h3>Plan</h3>
-              <p>Capture the audience, offer, source links, campaign pillar, and publishing intent in one workspace.</p>
-            </article>
-            <article>
-              <strong>B.</strong>
-              <h3>Produce</h3>
-              <p>Generate AI drafts against approved context, not loose prompts or disconnected notes.</p>
-            </article>
-            <article>
-              <strong>C.</strong>
-              <h3>Publish</h3>
-              <p>Move approved posts through connector checks before real scheduling is enabled.</p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="statusDesk">
-        <div class="magazineWrap statusGrid">
-          <div>
-            <p class="sectionFolio">Status desk</p>
-            <h2>Where every channel stands today.</h2>
-            <p>Buffer validates the publish path while direct APIs finish approvals. Nothing is auto-posted.</p>
-            <a class="btnGold" href="https://app.elevatemindstudio.net/workspace">Open live workspace</a>
-          </div>
-          <div class="channelTable">
-            <div><span>Buffer</span><strong class="statusText ready">Live</strong></div>
-            <div><span>YouTube</span><strong class="statusText neutral">OAuth ready</strong></div>
-            <div><span>LinkedIn</span><strong class="statusText watch">Review pending</strong></div>
-            <div><span>Discord</span><strong class="statusText watch">Verify pending</strong></div>
-          </div>
-        </div>
-      </section>
-
-      <section id="campaign" class="campaignBackpage">
-        <div class="magazineWrap campaignGrid">
-          <div>
-            <p class="sectionFolio">The last word - first campaign</p>
-            <h2>AlgoProven is the first managed brand inside the platform.</h2>
-          </div>
-          <div class="identityRows">
-            <article>
-              <span>Platform - ElevateMindStudio</span>
-              <p>Owns the product, API, workspace, legal pages, and integration layer.</p>
-            </article>
-            <article>
-              <span>Campaign - AlgoProven</span>
-              <p>Owns the social channels, audience, content themes, and campaign output.</p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <footer class="magazineFooter">
-        <div class="magazineWrap footerInner">
-          <div>
-            <img src="/assets/elevatemind-logo-horizontal-transparent.png" alt="ElevateMindStudio" width="1123" height="310">
-            <p>A private social media operations platform for planning, reviewing, approving, and publishing brand content.</p>
-          </div>
-          <nav aria-label="Footer navigation">
-            <a href="https://app.elevatemindstudio.net/workspace">Workspace</a>
-            <a href="/privacy/">Privacy</a>
-            <a href="/terms/">Terms</a>
-            <a href="mailto:support@elevatemindstudio.net">Contact</a>
-          </nav>
-        </div>
+      <footer class="stableFooter">
+        <span>2026 ElevateMindStudio</span>
+        <nav aria-label="Footer navigation">
+          <a href="https://app.elevatemindstudio.net/workspace">Workspace</a>
+          <a href="/privacy/">Privacy</a>
+          <a href="/terms/">Terms</a>
+          <a href="mailto:support@elevatemindstudio.net">Contact</a>
+        </nav>
       </footer>
     </main>
   </body>
